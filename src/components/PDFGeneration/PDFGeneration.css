@@ -1,0 +1,945 @@
+/* Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem 0.5rem;
+}
+
+/* Logo section styles */
+.logo-section {
+  align-items: center;
+  position: relative;
+  border-bottom: 2px solid #ff6a00;
+}
+
+.logo-icon {
+  display: flex;
+  position: relative;
+  width: 50px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-family: Georgia, Times, serif;
+  color: #116793;
+  display: flex;
+  align-items: baseline;
+  font-weight: bold;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.logo-brand {
+  font-size: 52px;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  position: relative;
+  top: -20px;
+}
+
+.logo-tm {
+  font-size: 10px;
+  vertical-align: super;
+  margin-left: 1px;
+}
+
+.candidate-header-info {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  text-align: right;
+}
+
+.candidate-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.test-details {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+}
+
+.test-date-label,
+.test-id-label {
+  color: #666;
+  font-size: 11px;
+}
+
+.test-date-value,
+.test-id-value {
+  font-weight: 500;
+}
+
+.language-test-title {
+  background-color: white;
+  padding: 5px 10px;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Card styles */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 0 auto;
+  border: 1px solid #eaeaea;
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro-text {
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 100%;
+}
+
+.preview-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.preview-button:hover {
+  background-color: #2980b9;
+}
+
+/* Report container */
+.report-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: white;
+  overflow: hidden;
+}
+
+/* Report header */
+.report-header {
+  padding: 15px 5px;
+  background-color: #fff;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.candidate-info {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.bold {
+  font-weight: bold;
+}
+.candidate-Details {
+  display: flex;
+  gap: 10px;
+}
+
+.candidate-info p {
+  margin: 5px 0;
+  color: #444;
+}
+.report-body {
+  display: flex;
+  margin-top: 10px;
+  padding: 0 5px;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+.report-title {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+}
+
+/* Report content with two columns */
+.report-content {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.left-column {
+  flex: 1;
+  min-width: 300px;
+  padding: 15px 10px;
+}
+
+.right-column {
+  flex: 1;
+  min-width: 300px;
+  padding: 15px 10px;
+  background-color: #f9f9f9;
+}
+
+/* Overall score section */
+.overall-score-section {
+  background-color: #ffffff;
+  width: 95%;
+  padding: 0 5px;
+}
+
+.overall-score-header {
+  display: flex;
+  margin-bottom: 15px;
+  background-color: #efefefcc;
+  padding: 10px;
+  border-radius: 4px;
+  gap: 20px;
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.score {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.overall-score {
+  font-size: 36px;
+  font-weight: bold;
+  color: #2c3e50;
+  padding: 5px 0;
+  position: relative;
+  left: 30%;
+}
+.overall {
+  font-size: 1rem;
+  width: max-content;
+}
+
+.cefr-badge {
+  color: #000;
+  border-radius: 4px;
+  font-weight: bold;
+  position: relative;
+  left: 10%;
+  top: -20px;
+}
+
+.overall-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.intelligibility {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f0f4f8;
+  border-radius: 4px;
+}
+
+.intelligibility-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.intelligibility-title {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.intelligibility-score {
+  background-color: #3498db;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.intelligibility-level {
+  color: #3498db;
+  font-weight: bold;
+}
+
+/* Skill explanations */
+.skill-explanations {
+  padding: 10px;
+}
+
+.skill-explanations h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.skill-explanation {
+  margin-bottom: 15px;
+}
+
+.skill-explanation h4 {
+  font-size: 16px;
+  color: #3498db;
+  margin-bottom: 5px;
+}
+
+.skill-explanation p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.skillspage {
+  display: flex;
+}
+.score-bar-container {
+  margin-bottom: 15px;
+}
+
+.score-bar-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.score-bar-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.score-bar-value {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.score-bar-background {
+  height: 12px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.score-bar-fill {
+  height: 100%;
+  background-color: #3498db;
+  border-radius: 6px;
+}
+
+.score-scale {
+  display: none;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Skill details section */
+.skill-details-section {
+  padding: 5px;
+  width: 100%;
+  break-inside: auto !important;
+  page-break-inside: auto !important;
+}
+
+.skill-details-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.skill-card {
+  padding: 10px;
+  margin-bottom: 15px !important;
+  border-bottom: 1px solid black;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.skill-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 50%;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.skill-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.skill-scores {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gse-score {
+  font-weight: bold;
+  border: 1px solid rgb(105, 173, 233);
+  background-color: #3498db;
+  color: #f0f0f0;
+  padding: 7px;
+  border-radius: 10px;
+}
+.gse-score:nth-of-type(2) {
+  background-color: #419cb2;
+}
+.gse-score:nth-of-type(3) {
+  background-color: #8a4b9d;
+}
+.gse-score:nth-child(4) {
+  background-color: #ad3b59;
+}
+
+.versant-score,
+.cefr-level {
+  color: #ff0000;
+  font-size: 14px;
+}
+
+.skill-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.skill-tips {
+  margin-top: 10px;
+}
+
+.skill-tips-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.skill-tips-list {
+  list-style-type: none;
+  padding-left: 5px;
+}
+
+.skill-tips-list li {
+  position: relative;
+  padding-left: 15px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #555;
+}
+
+.skill-tips-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #3498db;
+}
+
+.footer {
+  background-color: #f9f9f9;
+  padding: 15px 20px;
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  border-top: 1px solid #eaeaea;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 95%;
+  max-width: 95%;
+  max-height: 95vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #777;
+  float: right;
+}
+
+.modal-content {
+  padding: 10px;
+  width: 100%;
+}
+
+.score-report-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-actions {
+  padding: 15px 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #eaeaea;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.download-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.print-button {
+  background-color: #2c3e50;
+  color: white;
+}
+
+/* PDF generation specific styles */
+.pdf-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  font-size: 24px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.pdf-generating {
+  position: absolute;
+  left: -9999px;
+}
+
+.pdf-page {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 5mm;
+  background: white;
+}
+.chart-container {
+  display: block !important;
+  border-radius: 8px;
+ overflow: hidden !important;
+  margin-left: 10px;
+}
+
+.chart-content {
+  top: 30px;
+  height: 400px;
+  position: relative;
+  margin-bottom: 30px;
+}
+.score-bars-section {
+  width: 100%;
+  margin-left: 30px;
+  padding: 0 5px;
+}
+.score-bars-title {
+  margin-left: 10px;
+}
+.chart-area {
+  display: flex;
+  height: 250px;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 10px;
+  height: 100%;
+}
+
+.y-label {
+  font-size: 14px;
+  height: 0px;
+  display: flex;
+  align-items: center;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: black !important;
+}
+
+.chart-grid {
+  flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+.grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.bars-container {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.bar-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.bar {
+  width: 60px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  position: absolute;
+  bottom: 0;
+  transition: height 0.5s ease;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.bar-value {
+  color: white;
+  font-weight: 500;
+  padding-top: 5px;
+  font-size: 14px;
+}
+
+.x-label {
+  position: absolute;
+  bottom: -25px;
+  font-size: 14px;
+  color: #000000 !important;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+
+.x-axis-title {
+  text-align: center;
+  margin-top: 30px;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  font-size: 16px;
+  color: #718096;
+}
+
+/* Add styles for skill-content-container */
+.skill-content-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.skill-details {
+  flex: 3;
+}
+
+.skill-understanding {
+  flex: 2;
+  padding: 8px;
+  background-color: #efefefcc !important;
+  border-radius: 6px;
+}
+
+.understanding-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.understanding-text {
+  color: #4a5568;
+  line-height: 1.6;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+@media (max-width: 768px) {
+  .skill-content-container {
+    flex-direction: column;
+  }
+}
+
+/* PDF-specific styles */
+@media print {
+  .report-container {
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+  }
+
+  .report-body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .skill-card {
+    page-break-inside: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .skill-content-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .report-header {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+/* Fix for chart container in PDF */
+.chart-container {
+  width: 100%;
+  max-width: 100%;
+  page-break-inside: avoid;
+  position: relative;
+  top: 20px;
+}
+
+.chart-content {
+  height: 300px;
+  position: relative;
+}
+
+.bars-container {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.bar-column {
+  width: 20%;
+  position: relative;
+}
+
+.bar {
+  width: 40px;
+  position: absolute;
+  bottom: 0;
+}
+
+/* Add these specific styles for PDF page breaks */
+@media print {
+  .report-body {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .skill-details-section {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  .report-container {
+    width: 216mm;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+  }
+}
+
+/* Reduce spacing in PDF compact mode */
+.pdf-compact-mode .report-body {
+  padding: 5px 2px;
+  gap: 5px;
+}
+
+.pdf-compact-mode .skill-card {
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.pdf-compact-mode .skill-content-container {
+  gap: 5px;
+}
+
+.pdf-compact-mode .overall-score-header {
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.pdf-compact-mode .report-header {
+  padding: 10px 5px;
+}
+
+/* Add these specific styles for PDF compact mode */
+.pdf-compact-mode {
+  font-size: 90%;
+}
+
+.pdf-compact-mode .report-body {
+  padding: 2px;
+  gap: 2px;
+}
+
+.pdf-compact-mode .skill-card {
+  padding: 3px;
+  margin-bottom: 3px;
+}
+
+.pdf-compact-mode .skill-content-container {
+  gap: 3px;
+}
+
+.pdf-compact-mode .overall-score-header {
+  padding: 3px;
+  margin-bottom: 3px;
+}
+
+.pdf-compact-mode .report-header {
+  padding: 3px;
+}
+
+.pdf-compact-mode .logo-section {
+  margin-bottom: 0;
+}
+
+.pdf-compact-mode .logo-brand {
+  font-size: 36px;
+}
+
+.pdf-compact-mode .skill-details-title {
+  margin-bottom: 3px;
+  margin-top: 3px;
+}
+
+.pdf-compact-mode .chart-content {
+  height: 160px;
+}
+
+.pdf-compact-mode .chart-area {
+  height: 130px;
+}
+
+.pdf-compact-mode .x-axis-title {
+  margin-top: 10px;
+}
