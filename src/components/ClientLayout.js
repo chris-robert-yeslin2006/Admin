@@ -37,7 +37,7 @@ export default function ClientLayout({ children }) {
       'statistics': '/organization/Statistics',
       'admin-add': '/organization/Admin/Add',
       'admin-list': '/organization/Admin/List',
-      'student-add': '/organization/Student/add',
+      'student-add': '/organization/Student/Add',
       'student-list': '/organization/Student/List',
       'analytics': '/organization/Analytics/List',
       'contentManagement': '/organization/Content',

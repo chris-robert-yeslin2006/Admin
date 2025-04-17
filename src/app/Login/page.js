@@ -62,16 +62,16 @@ const Login = () => {
         // Redirect based on role
         switch(result.role) {
           case 'student':
-            router.push('/student/dashboard');
+            router.push('/student/');
             break;
           case 'admin':
-            router.push('/admin/dashboard');
+            router.push('/admin/]');
             break;
           case 'org':
-            router.push('/organization/dashboard');
+            router.push('/organization/');
             break;
           case 'individual':
-            router.push('/individual/dashboard');
+            router.push('/individual/ ');
             break;
           default:
             router.push('/');

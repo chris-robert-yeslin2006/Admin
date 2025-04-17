@@ -1,404 +1,289 @@
 'use client'
+import { useState } from 'react';
+import styles from '../../page.module.css';
 
-import { useEffect, useState } from 'react'
-import '../Admin.css'
-import ProtectedRoute from '../../../../components/ProtectedRoute'
-
-export default function AddAdmin () {
+export default function AddStudent() {
+  const [showMarkDetails, setShowMarkDetails] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    role: '',
-    contact: '',
-    language: ''
-  })
+    studentId: '',
+    email: '',
+    contactInfo: '',
+    language: 'Select Language',
+    markDetails: {
+      overallMark: '',
+      averageMark: '',
+      recentTest: '',
+      fluencyMark: '',
+      vocabularyMark: '',
+      sentenceMasteryMark: '',
+      pronunciationMark: ''
+    }
+  });
 
-  const [orgs, setOrgs] = useState([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-
-  useEffect(() => {
-    // Fetch all organization names
-    fetch('http://localhost:8000/organization/list')
-      .then(res => res.json())
-      .then(data => {
-        setOrgs(Array.isArray(data.organizations) ? data.organizations : [])
-      })
-      .catch(err => {
-        console.error('Failed to fetch organizations', err)
-        alert('Could not load organizations')
-      })
-  }, [])
-
-  const handleChange = e => {
-    const { name, value } = e.target
-    // Remove any trailing spaces from the field name
-    const cleanName = name.trim()
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [cleanName]: value
-    })
-  }
+      [name]: value
+    });
+  };
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const handleMarkChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      markDetails: {
+        ...formData.markDetails,
+        [name]: value
+      }
+    });
+  };
 
-    try {
-      const res = await fetch('http://localhost:8000/admin/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
+  const toggleMarkDetails = () => {
+    setShowMarkDetails(!showMarkDetails);
+  };
 
-      if (!res.ok) throw new Error('Failed to add admin')
-
-      const data = await res.json()
-      console.log('Admin added:', data)
-      setSubmitSuccess(true)
-
-      setTimeout(() => {
-        setSubmitSuccess(false)
-      }, 3000)
-
-      setFormData({
-        name: '',
-        role: '',
-        contact: '',
-        language: ''
-      })
-    } catch (error) {
-      console.error(error)
-      alert('Failed to add admin')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Submitted data:', formData);
+    // Here you would send the data to your backend
+    alert('Student added successfully!');
+  };
 
   return (
-    <ProtectedRoute>
-      <div className='layout-container'>
-        <div className='main-content'>
-          <div className='content-container'>
-            <div className='admin-header'>
-              <h1 className='page-title'>Add Administrator</h1>
-              <p className='page-description'>
-                Create a new administrator account with organization access
-              </p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Add Student</h1>
+        <p className={styles.subtitle}>Create a new student account with language assessment information</p>
+      </div>
+      
+      <div className={styles.formCard}>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label htmlFor="name">Student Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter full name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
             </div>
+            
+            <div className={styles.formGroup}>
+              <label htmlFor="language">Preferred Language</label>
+              <select
+                id="language"
+                name="language"
+                value={formData.language}
+                onChange={handleChange}
+                required
+              >
+                <option value="Select Language">Select Language</option>
+                <option value="English">English</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Arabic">Arabic</option>
+                <option value="Russian">Russian</option>
+              </select>
+            </div>
+          </div>
 
-            <div className='admin-form-container'>
-              {submitSuccess && (
-                <div className='success-message'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='20'
-                    height='20'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'></path>
-                    <polyline points='22 4 12 14.01 9 11.01'></polyline>
-                  </svg>
-                  <span>Administrator added successfully</span>
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter email address"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label htmlFor="contactInfo">Contact Information</label>
+              <input
+                type="tel"
+                id="contactInfo"
+                name="contactInfo"
+                placeholder="Phone number"
+                value={formData.contactInfo}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label htmlFor="studentId">Student ID</label>
+              <input
+                type="text"
+                id="studentId"
+                name="studentId"
+                placeholder="Enter student ID"
+                value={formData.studentId}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className={styles.divider}></div>
+
+          <div className={styles.buttonContainer}>
+            <button 
+              type="button" 
+              className={styles.markButton}
+              onClick={toggleMarkDetails}
+            >
+              Add Mark Details
+            </button>
+            
+            <button type="submit" className={styles.submitButton}>
+              Add Student
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {showMarkDetails && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2>Mark Details</h2>
+              <span className={styles.closeButton} onClick={toggleMarkDetails}>&times;</span>
+            </div>
+            
+            <div className={styles.modalBody}>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="overallMark">Overall Mark</label>
+                  <input
+                    type="number"
+                    id="overallMark"
+                    name="overallMark"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.overallMark}
+                    onChange={handleMarkChange}
+                  />
                 </div>
-              )}
-
-              <form onSubmit={handleSubmit}>
-                <div className='admin-form-grid'>
-                  <div className='form-field'>
-                    <label className='form-label'>Administrator Name</label>
-                    <input
-                      type='text'
-                      name='name'
-                      value={formData.name}
-                      onChange={handleChange}
-                      className='form-input'
-                      placeholder='Enter full name'
-                      required
-                    />
-                  </div>
-
-                  <div className='form-field'>
-                    <label className='form-label'>Role</label>
-                    <input
-                      type='text'
-                      name='role'
-                      value={formData.role}
-                      onChange={handleChange}
-                      className='form-input'
-                      placeholder='e.g. System Admin, Manager'
-                      required
-                    />
-                  </div>
-
-                  <div className='form-field'>
-                    <label className='form-label'>Contact Information</label>
-                    <input
-                      type='text'
-                      name='contact' // Remove the space after "contact"
-                      value={formData.contact}
-                      onChange={handleChange}
-                      className='form-input'
-                      placeholder='Email or phone number'
-                      required
-                    />
-                  </div>
-
-                  <div className='form-field'>
-                    <label className='form-label'>Preferred Language</label>
-                    <div className='select-wrapper'>
-                      <select
-                        name='language'
-                        value={formData.language}
-                        onChange={handleChange}
-                        className='form-input form-select'
-                        required
-                      >
-                        <option value=''>Select Language </option>
-                        <option value='English'>English</option>
-                        <option value='Japanese'>Japanese</option>
-                        <option value='Mandarin'>Mandarin</option>
-                        <option value='German'>German</option>
-                        <option value='Spanish'>Spanish</option>
-                        <option value='French'>French</option>
-                      </select>
-                    </div>
-                  </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="averageMark">Average Mark</label>
+                  <input
+                    type="number"
+                    id="averageMark"
+                    name="averageMark"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.averageMark}
+                    onChange={handleMarkChange}
+                  />
                 </div>
+              </div>
 
-                <div className='form-divider'></div>
-
-                <div className='form-actions'>
-                  <button
-                    type='submit'
-                    className={`submit-button ${
-                      isSubmitting ? 'submitting' : ''
-                    }`}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className='spinner'></span>
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      'Add Administrator'
-                    )}
-                  </button>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="recentTest">Recent Test Mark</label>
+                  <input
+                    type="number"
+                    id="recentTest"
+                    name="recentTest"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.recentTest}
+                    onChange={handleMarkChange}
+                  />
                 </div>
-              </form>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="fluencyMark">Fluency Mark</label>
+                  <input
+                    type="number"
+                    id="fluencyMark"
+                    name="fluencyMark"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.fluencyMark}
+                    onChange={handleMarkChange}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="vocabularyMark">Vocabulary Mark</label>
+                  <input
+                    type="number"
+                    id="vocabularyMark"
+                    name="vocabularyMark"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.vocabularyMark}
+                    onChange={handleMarkChange}
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="sentenceMasteryMark">Sentence Mastery Mark</label>
+                  <input
+                    type="number"
+                    id="sentenceMasteryMark"
+                    name="sentenceMasteryMark"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.sentenceMasteryMark}
+                    onChange={handleMarkChange}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="pronunciationMark">Pronunciation Mark</label>
+                  <input
+                    type="number"
+                    id="pronunciationMark"
+                    name="pronunciationMark"
+                    placeholder="0-100"
+                    min="0"
+                    max="100"
+                    value={formData.markDetails.pronunciationMark}
+                    onChange={handleMarkChange}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.buttonContainer}>
+                <button 
+                  type="button" 
+                  className={styles.saveButton}
+                  onClick={toggleMarkDetails}
+                >
+                  Save Marks
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </ProtectedRoute>
-  )
-}
-'use client'
-
-import { useEffect, useState } from 'react'
-import '../Admin.css'
-import ProtectedRoute from '../../../../components/ProtectedRoute'
-
-export default function AddAdmin () {
-  const [formData, setFormData] = useState({
-    name: '',
-    org_name: '',
-    role: '',
-    contact: '',
-    language: ''
-  })
-
-  const [orgs, setOrgs] = useState([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-
-  useEffect(() => {
-    // Fetch all organization names
-    fetch('http://localhost:8000/organization/list')
-      .then(res => res.json())
-      .then(data => {
-        setOrgs(Array.isArray(data.organizations) ? data.organizations : [])
-      })
-      .catch(err => {
-        console.error('Failed to fetch organizations', err)
-        alert('Could not load organizations')
-      })
-  }, [])
-
-  const handleChange = e => {
-    const { name, value } = e.target
-    // Remove any trailing spaces from the field name
-    const cleanName = name.trim()
-
-    setFormData({
-      ...formData,
-      [cleanName]: value
-    })
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const res = await fetch('http://localhost:8000/admin/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-
-      if (!res.ok) throw new Error('Failed to add admin')
-
-      const data = await res.json()
-      console.log('Admin added:', data)
-      setSubmitSuccess(true)
-
-      setTimeout(() => {
-        setSubmitSuccess(false)
-      }, 3000)
-
-      setFormData({
-        name: '',
-        org_name: '',
-        role: '',
-        contact: '',
-        language: ''
-      })
-    } catch (error) {
-      console.error(error)
-      alert('Failed to add admin')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  return (
-    <ProtectedRoute>
-      <div className='layout-container'>
-        <div className='main-content'>
-          <div className='content-container'>
-            <div className='admin-header'>
-              <h1 className='page-title'>Add Administrator</h1>
-              <p className='page-description'>
-                Create a new administrator account with organization access
-              </p>
-            </div>
-
-            <div className='admin-form-container'>
-              {submitSuccess && (
-                <div className='success-message'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='20'
-                    height='20'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'></path>
-                    <polyline points='22 4 12 14.01 9 11.01'></polyline>
-                  </svg>
-                  <span>Administrator added successfully</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit}>
-                <div className='admin-form-grid'>
-                  <div className='form-field'>
-                    <label className='form-label'>Administrator Name</label>
-                    <input
-                      type='text'
-                      name='name'
-                      value={formData.name}
-                      onChange={handleChange}
-                      className='form-input'
-                      placeholder='Enter full name'
-                      required
-                    />
-                  </div>
-
-                  <div className='form-field'>
-                    <label className='form-label'>Role</label>
-                    <input
-                      type='text'
-                      name='role'
-                      value={formData.role}
-                      onChange={handleChange}
-                      className='form-input'
-                      placeholder='e.g. System Admin, Manager'
-                      required
-                    />
-                  </div>
-
-                  <div className='form-field'>
-                    <label className='form-label'>Contact Information</label>
-                    <input
-                      type='text'
-                      name='contact' // Remove the space after "contact"
-                      value={formData.contact}
-                      onChange={handleChange}
-                      className='form-input'
-                      placeholder='Email or phone number'
-                      required
-                    />
-                  </div>
-
-                  <div className='form-field'>
-                    <label className='form-label'>Preferred Language</label>
-                    <div className='select-wrapper'>
-                      <select
-                        name='language'
-                        value={formData.language}
-                        onChange={handleChange}
-                        className='form-input form-select'
-                        required
-                      >
-                        <option value=''>Select Language </option>
-                        <option value='English'>English</option>
-                        <option value='Japanese'>Japanese</option>
-                        <option value='Mandarin'>Mandarin</option>
-                        <option value='German'>German</option>
-                        <option value='Spanish'>Spanish</option>
-                        <option value='French'>French</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className='form-divider'></div>
-
-                <div className='form-actions'>
-                  <button
-                    type='submit'
-                    className={`submit-button ${
-                      isSubmitting ? 'submitting' : ''
-                    }`}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className='spinner'></span>
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      'Add Administrator'
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ProtectedRoute>
-  )
+      )}
+    </div>
+  );
 }
