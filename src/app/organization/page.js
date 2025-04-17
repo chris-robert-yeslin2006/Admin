@@ -46,7 +46,6 @@ export default function Dashboard() {
 
         <style jsx>{`
           .dashboard-container {
-            
             background-color: #f5f7fa;
           }
           

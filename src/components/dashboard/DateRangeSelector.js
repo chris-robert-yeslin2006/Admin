@@ -1,5 +1,6 @@
 // components/dashboard/DateRangeSelector.js
 import styles from '../../app/organization/Statistics/StatisticsSection.module.css'
+import CustomDateRange from './DateRange'
 
 const timeframeOptions = [
   { id: '7days', label: '7 Days' },
@@ -29,6 +30,7 @@ const DateRangeSelector = ({ customTimeframe, setCustomTimeframe }) => {
             </button>
           ))}
         </div>
+        <CustomDateRange/>
       </div>
     </section>
   )

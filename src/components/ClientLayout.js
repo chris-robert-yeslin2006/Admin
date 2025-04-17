@@ -1,17 +1,44 @@
 'use client';
-
 import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import SideNav from './SideNav';
+import Cookies from 'js-cookie';
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [userProfile, setUserProfile] = useState({
+    avatar: '👤',
+    name: 'Loading...',
+    email: '',
+    role: ''
+  });
+
+  useEffect(() => {
+    const username = Cookies.get('username') || 'User';
+    const role = Cookies.get('role') || '';
+    const token = Cookies.get('token');
+    const email = Cookies.get('email') || '';
+
+    setUserProfile({
+      avatar: '👤',
+      name: username,
+      email: email,
+      role: role
+    });
+
+    if (!token) {
+      router.push('/');
+    }
+  }, [router]);
 
   const handleNavChange = (section) => {
     const routes = {
       'statistics': '/organization/Statistics',
       'admin-add': '/organization/Admin/Add',
       'admin-list': '/organization/Admin/List',
+      'student-add': '/organization/Student/add',
+      'student-list': '/organization/Student/List',
       'analytics': '/organization/Analytics/List',
       'contentManagement': '/organization/Content',
       'systemSettings': '/organization/Settings',
@@ -22,16 +49,9 @@ export default function ClientLayout({ children }) {
     }
   };
 
-  const userProfile = {
-    avatar: '👤',
-    name: 'Surya',
-    email: 'admin@example.com',
-    role: 'Super Admin',
-  };
-
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <div >
+      <div>
         <SideNav
           activeSection={pathname}
           onNavChange={handleNavChange}

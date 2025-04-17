@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
         <ClientLayout>
           {children}
         </ClientLayout>
-        </>
+    </>
       
   );
 }

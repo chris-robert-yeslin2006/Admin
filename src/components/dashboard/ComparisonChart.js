@@ -35,9 +35,6 @@ const ComparisonChart = ({
         selectedMetrics={selectedMetrics}
         toggleMetricSelection={toggleMetricSelection}
       />
-      <div className={styles.timeframeControls}>
-        <CustomDateRange onApply={handleCustomDateRange} />
-      </div>
     </div>
   );
 

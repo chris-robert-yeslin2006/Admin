@@ -46,19 +46,15 @@ export default function Dashboard() {
   return (
     <div className={styles.container} style={{ overflowX: 'hidden' }}>
       <main className={styles.dashboardContent}>
-        {/* Overview Section */}
         <Overview />
 
-        {/* Time-frame Sensitive Metrics */}
         <MetricsSection />
 
-        {/* Global Time Filter */}
         <DateRangeSelector 
           customTimeframe={customTimeframe}
           setCustomTimeframe={setCustomTimeframe}
         />
 
-        {/* Chart Grid Layout */}
         <section className={styles.chartsGridContainer}>
           <OrganizationsChart 
             chartType={chartType}

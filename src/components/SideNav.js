@@ -6,10 +6,10 @@ export default function SideNav({ activeSection, onNavChange, userProfile }) {
   // State for tracking expanded nav items
   const [expandedItems, setExpandedItems] = useState({
     organizations: false,
-    admin: false
+    admin: false,
+    student: false
   });
 
-  // Toggle expanded state for items with sub-navigation
   const toggleExpand = (item) => {
     setExpandedItems({
       ...expandedItems,
@@ -17,13 +17,15 @@ export default function SideNav({ activeSection, onNavChange, userProfile }) {
     });
   };
 
+  const isOrganization = userProfile.role === 'organization';
+
   return (
     <div className="sidebar">
       <div className="user-profile">
         <div className="user-avatar">{userProfile.avatar}</div>
         <div className="user-info">
           <h3>{userProfile.name}</h3>
-          <p>Organization</p>
+          <p>{userProfile.role}</p>
         </div>
       </div>
       
@@ -67,6 +69,37 @@ export default function SideNav({ activeSection, onNavChange, userProfile }) {
           )}
         </li>
         
+        <li className={`nav-item ${activeSection.startsWith('student') ? 'active' : ''}`}>
+          <div onClick={() => toggleExpand('student')} className="nav-toggle">
+            <div className="nav-label">
+              <i>👥</i>
+              <span>Student</span>
+            </div>
+            <span className={`chevron ${expandedItems.student ? 'expanded' : ''}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </div>
+          
+          {expandedItems.student && (
+            <ul className="sub-nav">
+              <li 
+                className={activeSection === 'student-add' ? 'active' : ''}
+                onClick={() => onNavChange('student-add')}
+              >
+                Add
+              </li>
+              <li 
+                className={activeSection === 'student-list' ? 'active' : ''}
+                onClick={() => onNavChange('student-list')}
+              >
+                List
+              </li>
+            </ul>
+          )}
+        </li>
+
         <li 
           className={`nav-item ${activeSection === 'analytics' ? 'active' : ''}`}
           onClick={() => onNavChange('analytics')}
@@ -75,13 +108,15 @@ export default function SideNav({ activeSection, onNavChange, userProfile }) {
           <span>Analytics</span>
         </li>
         
-        <li 
-          className={`nav-item ${activeSection === 'contentManagement' ? 'active' : ''}`}
-          onClick={() => onNavChange('contentManagement')}
-        >
-          <i>📄</i>
-          <span>Content Management</span>
-        </li>
+        {isOrganization && (
+          <li 
+            className={`nav-item ${activeSection === 'contentManagement' ? 'active' : ''}`}
+            onClick={() => onNavChange('contentManagement')}
+          >
+            <i>📄</i>
+            <span>Content Management</span>
+          </li>
+        )}
         
         <li 
           className={`nav-item ${activeSection === 'systemSettings' ? 'active' : ''}`}
