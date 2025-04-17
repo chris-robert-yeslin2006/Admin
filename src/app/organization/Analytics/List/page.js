@@ -1,267 +1,189 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+'use client'
+
+import {  useRouter, useSearchParams } from 'next/navigation'
 import ProtectedRoute from '../../../../components/ProtectedRoute';
-// import './analytics.css';
+import { Pointer } from 'lucide-react';
 
-export default function AnalyticsOrgList() {
-  const [organizations, setOrganizations] = useState([]);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const res = await fetch('http://localhost:8000/organization/list');
-        const data = await res.json();
+export default function LanguageListPage() {
+  const router = useRouter()
   
-        // Always set an array (even if data.organizations is undefined)
-        setOrganizations(Array.isArray(data.organizations) ? data.organizations : []);
-      } catch (error) {
-        console.error('Error fetching organizations:', error);
-        setOrganizations([]); // fallback to empty array
-      }
-    };
-  
-    fetchOrganizations();
-  }, []);
-  
-
-  const handleViewDetails = (orgId) => {
-    router.push(`/Dashboard/Analytics/List/LanguageList?orgId=${orgId}`);
-  };
+  // List of languages with their details
+  const languages = [
+    { 
+      id: 'japanese', 
+      name: 'Japanese', 
+      nativeName: '日本語', 
+      flag: '🇯🇵',
+      speakers: '125 million'
+    },
+    { 
+      id: 'mandarin', 
+      name: 'Mandarin', 
+      nativeName: '普通话', 
+      flag: '🇨🇳',
+      speakers: '1.1 billion'
+    },
+    { 
+      id: 'spanish', 
+      name: 'Spanish', 
+      nativeName: 'Español', 
+      flag: '🇪🇸',
+      speakers: '460 million'
+    },
+    { 
+      id: 'french', 
+      name: 'French', 
+      nativeName: 'Français', 
+      flag: '🇫🇷',
+      speakers: '275 million'
+    },
+    { 
+      id: 'german',
+      name: 'German',
+      nativeName: 'Deutsch', 
+      flag: '🇩🇪',
+      speakers: '100 million'
+    },
+    { 
+      id: 'english', 
+      name: 'English', 
+      nativeName: 'English', 
+      flag: '🇬🇧',
+      speakers: '1.4 billion'
+    }
+  ]
+  const searchParams = useSearchParams();
+  const orgId = searchParams.get('orgId');
 
   return (
     <ProtectedRoute>
-    <div className="organizations-list-container">
-    <div className="header">
-      <h1>Analytics</h1>
+    <div className="language-list-container">
       
-    </div>
-
-    <div className="search-filter">
-      <div className="search-box">
-        <input type="text" placeholder="Search organizations..." />
-        <button className="search-button">Search</button>
+      <div className="languages-grid">
+        {languages.map((language) => (
+          <div className="language-card" key={language.id}>
+            <div className="language-flag">{language.flag}</div>
+            <div className="language-info">
+              <h2>{language.name}</h2>
+              <p className="native-name">{language.nativeName}</p>
+              <p className="speakers">{language.speakers} speakers</p>
+            </div>
+            <button 
+              className="view-button"
+              onClick={() =>
+                router.push(
+                  `List/LanguageDetails?orgId=${orgId}&language=${language.name}`
+                )}
+                style={{cursor:Pointer}}
+            >
+              View Details
+            </button>
+          </div>
+        ))}
       </div>
-      <div className="filter">
-        <select defaultValue="">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
-      </div>
-    </div>
-
-    <div className="table-container">
-      <table className="organizations-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Members</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {organizations.map(org => (
-            <tr key={org.id}>
-              <td>{org.name}</td>
-              <td>{org.ambassador_name}</td>
-              <td className="actions">
-              <button className="view-admins-btn" onClick={() => handleViewDetails(org.id)}>
-                View Details
-              </button>
-              </td>
-            </tr>
-            ))}
-          </tbody>
-        </table>
-         </div>    
-         
+      
       <style jsx>{`
-        .organizations-list-container {
+        .language-list-container {
+          background-color : #f2f2f2;
           padding: 24px;
-          background-color: #f8fafc;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-          height:99vh;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
         
         .header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
+          text-align: center;
+          margin-bottom: 48px;
         }
         
-        h1 {
-          margin: 0;
-          color: #1e293b;
-          font-size: 28px;
+        .header h1 {
+          font-size: 32px;
+          font-weight: 700;
+          color: #1f2937;
+          margin-bottom: 8px;
         }
         
-        .add-button {
-          background-color: #0ea5e9;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          padding: 10px 16px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: background-color 0.2s;
+        .header p {
+          font-size: 18px;
+          color: #6b7280;
         }
         
-        .add-button:hover {
-          background-color: #0284c7;
+        .languages-grid {
+          display: grid;
+          grid-template-columns: repeat(1, 1fr);
+          gap: 24px;
         }
         
-        .search-filter {
-          display: flex;
-          gap: 16px;
-          margin-bottom: 24px;
+        @media (min-width: 640px) {
+          .languages-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
         
-        .search-box {
-          display: flex;
-          flex-grow: 1;
+        @media (min-width: 1024px) {
+          .languages-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
         }
         
-        .search-box input {
-          flex-grow: 1;
-          padding: 10px 16px;
-          border: 1px solid #e2e8f0;
-          border-radius: 6px 0 0 6px;
-          font-size: 14px;
-        }
-        
-        .search-button {
-          background-color: #0ea5e9;
-          color: white;
-          border: none;
-          border-radius: 0 6px 6px 0;
-          padding: 0 16px;
-          cursor: pointer;
-        }
-        
-        .filter select {
-          padding: 10px 16px;
-          border: 1px solid #e2e8f0;
-          border-radius: 6px;
-          font-size: 14px;
+        .language-card {
           background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.2s ease;
         }
         
-        .table-container {
-          overflow-x: auto;
-          margin-bottom: 24px;
+        .language-card:hover {
+          transform: translateY(-5px);
         }
         
-        .organizations-table {
-          width: 100%;
-          border-collapse: collapse;
+        .language-flag {
+          font-size: 48px;
+          margin-bottom: 16px;
         }
         
-        .organizations-table th {
-          text-align: left;
-          padding: 14px 16px;
-          background-color: #e2e8f0;
-          color: #475569;
+        .language-info {
+          flex-grow: 1;
+        }
+        
+        .language-info h2 {
+          font-size: 24px;
           font-weight: 600;
+          color: #1f2937;
+          margin-bottom: 8px;
         }
         
-        .organizations-table td {
-          padding: 14px 16px;
-          border-bottom: 1px solid #e2e8f0;
+        .native-name {
+          font-size: 18px;
+          color: #4b5563;
+          margin-bottom: 8px;
         }
         
-        .status-badge {
-          display: inline-block;
-          padding: 4px 10px;
-          border-radius: 16px;
-          font-size: 12px;
-          font-weight: 500;
-        }
-        
-        .status-badge.active {
-          background-color: #dcfce7;
-          color: #166534;
-        }
-        
-        .status-badge.inactive {
-          background-color: #fee2e2;
-          color: #991b1b;
-        }
-        
-        .actions {
-          display: flex;
-          gap: 8px;
-        }
-        
-        .view-admins-btn, .edit-btn {
-          padding: 6px 12px;
-          border-radius: 4px;
-          cursor: pointer;
+        .speakers {
           font-size: 14px;
+          color: #6b7280;
+          margin-bottom: 16px;
+        }
+        
+        .view-button {
+          background-color: #3b82f6;
+          color: white;
           border: none;
-        }
-        
-        .view-admins-btn {
-          background-color: #0ea5e9;
-          color: white;
-        }
-        
-        .view-admins-btn:hover {
-          background-color: #0284c7;
-        }
-        
-        .edit-btn {
-          background-color: #64748b;
-          color: white;
-        }
-        
-        .edit-btn:hover {
-          background-color: #475569;
-        }
-        
-        .pagination {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .pagination button {
-          padding: 8px 16px;
-          border: 1px solid #e2e8f0;
-          background-color: white;
           border-radius: 6px;
+          padding: 10px 16px;
+          font-size: 16px;
+          font-weight: 500;
           cursor: pointer;
+          transition: background-color 0.2s ease;
+          width: 100%;
         }
         
-        .pagination button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-        
-        .page-numbers {
-          display: flex;
-          gap: 8px;
-        }
-        
-        .page-numbers button {
-          width: 36px;
-          height: 36px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0;
-        }
-        
-        .page-numbers button.active {
-          background-color: #0ea5e9;
-          color: white;
-          border-color: #0ea5e9;
+        .view-button:hover {
+          background-color: #2563eb;
         }
       `}</style>
     </div>
     </ProtectedRoute>
-  );
+  )
 }
