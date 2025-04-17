@@ -36,8 +36,13 @@ export default function ClientLayout({ children }) {
     const routes = {
       'statistics': '/organization/Statistics',
       'admin-add': '/organization/Admin/Add',
+<<<<<<< HEAD
       'admin-list': '/organization/Admin/List',
       'student-add': '/organization/Student/Add',
+=======
+      'admin-list': '/organization/Admin/AdminDetails',
+      'student-add': '/organization/Student/add',
+>>>>>>> 4ae667e748b284c76336cacedaa1d1d593e3f343
       'student-list': '/organization/Student/List',
       'analytics': '/organization/Analytics/List',
       'contentManagement': '/organization/Content',
