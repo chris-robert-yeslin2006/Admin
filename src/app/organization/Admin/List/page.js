@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import '../Admin.css'
-import ProtectedRoute from '@/components/ProtectedRoute'
+import ProtectedRoute from '../../../../components/ProtectedRoute'
 
 export default function AdminListPage() {
   const [organizations, setOrganizations] = useState([])

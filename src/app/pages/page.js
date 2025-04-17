@@ -1,9 +1,9 @@
 import React from 'react';
-import Header from '../components/Header';
-import HeroSection from '../components/HeroSection';
-import LanguagesSection from '../components/LanguagesSection';
-import PricingSection from '../components/PricingSection';
-import Footer from '../components/Footer';
+import Header from '../../components/Header';
+import HeroSection from '../../components/HeroSection';
+import LanguagesSection from '../../components/LanguagesSection';
+import PricingSection from '../../components/PricingSection';
+import Footer from '../../components/Footer';
 
 const HomePage = () => {
   return (

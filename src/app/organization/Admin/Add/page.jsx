@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import '../Admin.css';
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "../../../../components/ProtectedRoute";
 
 export default function AddAdmin() {
   const [formData, setFormData] = useState({

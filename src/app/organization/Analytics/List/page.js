@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ProtectedRoute from '../../../components/ProtectedRoute';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
 // import './analytics.css';
 
 export default function AnalyticsOrgList() {
@@ -13,16 +13,18 @@ export default function AnalyticsOrgList() {
       try {
         const res = await fetch('http://localhost:8000/organization/list');
         const data = await res.json();
-
-        // Ensure we're only setting the array part
-        setOrganizations(data.organizations);
+  
+        // Always set an array (even if data.organizations is undefined)
+        setOrganizations(Array.isArray(data.organizations) ? data.organizations : []);
       } catch (error) {
         console.error('Error fetching organizations:', error);
+        setOrganizations([]); // fallback to empty array
       }
     };
-
+  
     fetchOrganizations();
   }, []);
+  
 
   const handleViewDetails = (orgId) => {
     router.push(`/Dashboard/Analytics/List/LanguageList?orgId=${orgId}`);
