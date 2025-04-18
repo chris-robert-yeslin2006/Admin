@@ -15,23 +15,14 @@ const Login = () => {
   const [animateIn, setAnimateIn] = useState(false);
   const router = useRouter();
 
+  
+
+
   useEffect(() => {
-    setAnimateIn(true);
-
-    const fetchOrganizations = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/auth/organizations');
-        if (response.ok) {
-          const data = await response.json();
-          setOrganizations(data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch organizations:", err);
-      }
-    };
-
-    fetchOrganizations();
+    const orgId = Cookies.get('org_id');
+    console.log('org_id from cookie on load:', orgId);
   }, []);
+  
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -41,37 +32,57 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
+  
     try {
+      // Clear any existing cookies before login
+      Cookies.remove('token');
+      Cookies.remove('role');
+      Cookies.remove('username');
+      Cookies.remove('org_id');
+      
       const response = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
+        console.log('Full login response:', result);
+        
         // Store authentication data
         Cookies.set('token', result.access_token, { secure: true });
         Cookies.set('role', result.role, { secure: true });
-        
         Cookies.set('username', result.username, { secure: true });
-        if (result.org_id) Cookies.set('org_id', result.org_id, { secure: true });
-
-        // Redirect based on role
+        
+        
+        // For org users, ensure org_id is present
+        if (result.role === 'org' && !result.org_id) {
+          console.error('Warning: org_id is missing for organization user');
+          setError('Organization ID is missing. Please contact support.');
+          setIsLoading(false);
+          return;
+        }
+        
+        if (result.org_id) {
+          Cookies.set('org_id', result.org_id);
+          console.log('Set org_id cookie:', result.org_id);
+        }
+  
+        // Redirect based on role with fixed URL paths
         switch(result.role) {
           case 'student':
-            router.push('/student/');
+            router.push('/student');
             break;
           case 'admin':
-            router.push('/admin/]');
+            router.push('/admin');  // Fixed the bracket typo
             break;
           case 'org':
-            router.push('/organization/');
+            router.push('/organization');
             break;
           case 'individual':
-            router.push('/individual/ ');
+            router.push('/individual');  // Fixed the space typo
             break;
           default:
             router.push('/');
@@ -80,6 +91,7 @@ const Login = () => {
         setError(result.detail || 'Login failed. Please try again.');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

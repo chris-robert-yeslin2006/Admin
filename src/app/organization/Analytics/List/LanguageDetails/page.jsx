@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import BarChart from '../../../Statistics/BarChart'
-import DonutChart from '../../../Statistics/DonutChart'
+import BarChart from '../../../Statistics/BarChart';
+import DonutChart from '../../../Statistics/DonutChart';
 import ProtectedRoute from '../../../../../components/ProtectedRoute';
+import Cookies from 'js-cookie';
 
-// Mock data constants
+// Mock data constants for fallback
 const MOCK_STUDENTS = [
   { id: '1', name: "Alex Johnson", org_id: '123', email: "alex@example.com", language: "English", overall_mark: 82.8, average_mark: 82.8, recent_test_mark: 85, fluency_mark: 80, vocab_mark: 84, sentence_mastery: 83, pronunciation: 82 },
   { id: '2', name: "Samantha Lee", org_id: '123', email: "samantha@example.com", language: "English", overall_mark: 90.0, average_mark: 90.0, recent_test_mark: 92, fluency_mark: 89, vocab_mark: 91, sentence_mastery: 90, pronunciation: 88 },
@@ -36,9 +37,8 @@ const MOCK_LANGUAGE_DETAILS = {
 };
 
 export default function AnalyticsPage() {
-  const router = useRouter()
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const orgId = searchParams.get('orgId');
   const language = searchParams.get('language');
   
   // State for storing data
@@ -46,8 +46,16 @@ export default function AnalyticsPage() {
   const [studentData, setStudentData] = useState([]);
   const [summaryData, setSummaryData] = useState({});
   const [languageDetails, setLanguageDetails] = useState({});
-  const [useMockData, setUseMockData] = useState(true); // Default to mock data for testing
-  
+  const [orgId, setOrgId] = useState(null);
+
+  useEffect(() => {
+    // Get org_id from cookies
+    const orgIdFromCookie = Cookies.get('org_id');
+    if (orgIdFromCookie) {
+      setOrgId(orgIdFromCookie);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!orgId || !language) {
@@ -58,38 +66,34 @@ export default function AnalyticsPage() {
       try {
         setLoading(true);
         
-        if (useMockData) {
-          // Use mock data for development
+        // Try fetching from real API
+        try {
+          const API_BASE_URL = 'http://localhost:8000';
+          
+          // Fetch students
+          const studentsResponse = await fetch(`${API_BASE_URL}/analytics/students?org_id=${orgId}&language=${language}`);
+          const studentsData = await studentsResponse.json();
+          console.log("Students Data:", studentsData);
+          
+          // Fetch summary
+          const summaryResponse = await fetch(`${API_BASE_URL}/analytics/summary?org_id=${orgId}&language=${language}`);
+          const summaryData = await summaryResponse.json();
+          console.log("Summary Data:", summaryData);
+          
+          // Fetch language details
+          const detailsResponse = await fetch(`${API_BASE_URL}/analytics/language-detail?org_id=${orgId}&language=${language}`);
+          const detailsData = await detailsResponse.json();
+          console.log("Language Details Data:", detailsData);
+          
+          setStudentData(studentsData.students || []);
+          setSummaryData(summaryData.summary || {});
+          setLanguageDetails(detailsData || {});
+        } catch (error) {
+          console.error("API fetch error, falling back to mock data:", error);
+          // Fall back to mock data if API fails
           setStudentData(MOCK_STUDENTS);
           setSummaryData(MOCK_SUMMARY);
           setLanguageDetails(MOCK_LANGUAGE_DETAILS);
-        } else {
-          // Try fetching from real API
-          try {
-            const API_BASE_URL = 'http://localhost:8000'; // Or your actual FastAPI URL
-            
-            // Fetch students
-            const studentsResponse = await fetch(`${API_BASE_URL}/analytics/students?org_id=${orgId}&language=${language}`);
-            const studentsData = await studentsResponse.json();
-            
-            // Fetch summary
-            const summaryResponse = await fetch(`${API_BASE_URL}/analytics/summary?org_id=${orgId}&language=${language}`);
-            const summaryData = await summaryResponse.json();
-            
-            // Fetch language details
-            const detailsResponse = await fetch(`${API_BASE_URL}/analytics/language-detail?org_id=${orgId}&language=${language}`);
-            const detailsData = await detailsResponse.json();
-            
-            setStudentData(studentsData.students || []);
-            setSummaryData(summaryData.summary || {});
-            setLanguageDetails(detailsData || {});
-          } catch (error) {
-            console.error("API fetch error, falling back to mock data:", error);
-            // Fall back to mock data if API fails
-            setStudentData(MOCK_STUDENTS);
-            setSummaryData(MOCK_SUMMARY);
-            setLanguageDetails(MOCK_LANGUAGE_DETAILS);
-          }
         }
       } catch (error) {
         console.error("Error in data fetching:", error);
@@ -99,7 +103,7 @@ export default function AnalyticsPage() {
     };
     
     fetchData();
-  }, [orgId, language, useMockData]);
+  }, [orgId, language]);
 
   // Calculate pass percentage data for the donut chart
   const calculatePassData = () => {
@@ -183,6 +187,18 @@ export default function AnalyticsPage() {
     studentData.reduce((sum, student) => sum + student.overall_mark, 0) / studentData.length : 84.5);
   const testCount = languageDetails.tests_conducted || 58;
 
+  const handleViewStudents = () => {
+    if (orgId) {
+      router.push(`LanguageDetails/StudentList?orgId=${orgId}&language=${language}`);
+    }
+  };
+
+  const handleViewRankings = () => {
+    if (orgId) {
+      router.push(`/Dashboard/Analytics/List/LanguageList/LanguageDetails/StudentList?orgId=${orgId}&language=${language}&sort=topPerformers`);
+    }
+  };
+
   if (loading) {
     return (
       <ProtectedRoute>
@@ -195,449 +211,428 @@ export default function AnalyticsPage() {
 
   return (
     <ProtectedRoute>
-    <div className="analytics-container">
-      <div className="page-header">
-        <h1 className="page-title">Student Analytics Dashboard</h1>
-        <div className="header-actions">
-          <label className="toggle-mock">
-            <input
-              type="checkbox"
-              checked={useMockData}
-              onChange={() => setUseMockData(!useMockData)}
-            />
-            <span>Use Mock Data</span>
-          </label>
-          <button 
-            className="student-button"
-            onClick={() => router.push(`
-              LanguageDetails/StudentList?orgId=${orgId}&language=${language}`)}
-          >
-            View All Students <span className="button-icon">→</span>
-          </button>
-        </div>
-      </div>
-      
-      {/* Top boxes */}
-      <div className="top-boxes">
-        <div className="info-box">
-          <h2 className="box-label">Total Students</h2>
-          <div className="box-value-container">
-            <span className="box-value">{studentCount}</span>
-            <span className="trend-indicator positive">+12% ↑</span>
-          </div>
-        </div>
-        
-        <div className="info-box">
-          <h2 className="box-label">Tests Conducted</h2>
-          <div className="box-value-container">
-            <span className="box-value">{testCount}</span>
-            <span className="trend-indicator positive">+3 this week</span>
-          </div>
-        </div>
-
-        <div className="info-box">
-          <h2 className="box-label">Pass Rate</h2>
-          <div className="box-value-container">
-            <span className="box-value">{passRate}%</span>
-            <span className="trend-indicator positive">+2.5% ↑</span>
-          </div>
-        </div>
-        
-        <div className="info-box">
-          <h2 className="box-label">Average Score</h2>
-          <div className="box-value-container">
-            <span className="box-value">{overallAvgScore.toFixed(1)}</span>
-            <span className="trend-indicator positive">+1.2 pts ↑</span>
-          </div>
-        </div>
-      </div>
-      
-      {/* Charts Section */}
-      <div className="charts-section">
-        <div className="chart-box">
-          <h2 className="chart-title">Pass Percentage</h2>
-          <div className="chart-container">
-            <DonutChart 
-              data={passData} 
-              width={300} 
-              height={300} 
-              centerLabel="Pass Rate" 
-              centerValue={`${passRate}%`}
-              showTooltip={true} 
-            />
-          </div>
-        </div>
-        
-        <div className="chart-box">
-          <h2 className="chart-title">Average Scores Trend</h2>
-          <div className="chart-container">
-            <BarChart 
-              data={avgScoreData} 
-              width={500} 
-              height={300} 
-              xLabel="Time Period" 
-              yLabel="Average Score" 
-            />
-          </div>
-        </div>
-      </div>
-      
-      {/* Leaderboard */}
-      <div className="leaderboard-section">
-        <div className="leaderboard-header">
-          <h2 className="section-title">Student Leaderboard</h2>
-          <div className="leaderboard-actions">
+      <div className="analytics-container">
+        <div className="page-header">
+          <h1 className="page-title">Student Analytics Dashboard</h1>
+          <div className="header-actions">
             <button 
-              className="secondary-button"
-              onClick={() => router.push(`/Dashboard/Analytics/List/LanguageList/LanguageDetails/StudentList?orgId=${orgId}&language=${language}&sort=topPerformers`)}
+              className="student-button"
+              onClick={handleViewStudents}
             >
-              View All Rankings
+              View All Students <span className="button-icon">→</span>
             </button>
           </div>
         </div>
-        <div className="leaderboard">
-          <div className="table-container">
-            <table className="leaderboard-table">
-              <thead>
-                <tr>
-                  <th>Rank</th>
-                  <th>Name</th>
-                  <th>Tests Attended</th>
-                  <th>Highest Score</th>
-                  <th>Total Score</th>
-                  <th>Avg. Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboardData.map((student, index) => (
-                  <tr key={index} className={index < 3 ? "top-performer" : ""}>
-                    <td>
-                      <div className={`rank ${index < 3 ? "top-rank" : ""}`}>
-                        {index < 3 ? 
-                          <span className="rank-medal">🏆</span> : 
-                          <span>#{index + 1}</span>
-                        }
-                      </div>
-                    </td>
-                    <td>
-                      <div className="student-name">{student.name}</div>
-                    </td>
-                    <td>
-                      <div className="data-cell">{student.testsAttended}</div>
-                    </td>
-                    <td>
-                      <div className="data-cell">{student.highestScore}</div>
-                    </td>
-                    <td>
-                      <div className="data-cell">{student.totalScore}</div>
-                    </td>
-                    <td>
-                      <div className="avg-score">{student.avgScore.toFixed(1)}</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        
+        {/* Top boxes */}
+        <div className="top-boxes">
+          <div className="info-box">
+            <h2 className="box-label">Total Students</h2>
+            <div className="box-value-container">
+              <span className="box-value">{studentCount}</span>
+              <span className="trend-indicator positive">+12% ↑</span>
+            </div>
+          </div>
+          
+          <div className="info-box">
+            <h2 className="box-label">Tests Conducted</h2>
+            <div className="box-value-container">
+              <span className="box-value">{testCount}</span>
+              <span className="trend-indicator positive">+3 this week</span>
+            </div>
+          </div>
+
+          <div className="info-box">
+            <h2 className="box-label">Pass Rate</h2>
+            <div className="box-value-container">
+              <span className="box-value">{passRate}%</span>
+              <span className="trend-indicator positive">+2.5% ↑</span>
+            </div>
+          </div>
+          
+          <div className="info-box">
+            <h2 className="box-label">Average Score</h2>
+            <div className="box-value-container">
+              <span className="box-value">{overallAvgScore.toFixed(1)}</span>
+              <span className="trend-indicator positive">+1.2 pts ↑</span>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <style jsx>{`
-        /* Base styles */
-        .analytics-container {
-          padding: 24px;
-          background-color: #f9fafb;
-          min-height: 100vh;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-
-        .page-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-        }
-
-        .page-title {
-          font-size: 28px;
-          font-weight: 700;
-          color: #1f2937;
-          margin: 0;
-        }
         
-        .header-actions {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
+        {/* Charts Section */}
+        <div className="charts-section">
+          <div className="chart-box">
+            <h2 className="chart-title">Pass Percentage</h2>
+            <div className="chart-container">
+              <DonutChart 
+                data={passData} 
+                width={300} 
+                height={300} 
+                centerLabel="Pass Rate" 
+                centerValue={`${passRate}%`}
+                showTooltip={true} 
+              />
+            </div>
+          </div>
+          
+          <div className="chart-box">
+            <h2 className="chart-title">Average Scores Trend</h2>
+            <div className="chart-container">
+              <BarChart 
+                data={avgScoreData} 
+                width={500} 
+                height={300} 
+                xLabel="Time Period" 
+                yLabel="Average Score" 
+              />
+            </div>
+          </div>
+        </div>
         
-        .toggle-mock {
-          display: flex;
-          align-items: center;
-          font-size: 14px;
-          color: #6b7280;
-          cursor: pointer;
-        }
+        {/* Leaderboard */}
+        <div className="leaderboard-section">
+          <div className="leaderboard-header">
+            <h2 className="section-title">Student Leaderboard</h2>
+            <div className="leaderboard-actions">
+              <button 
+                className="secondary-button"
+                onClick={handleViewRankings}
+              >
+                View All Rankings
+              </button>
+            </div>
+          </div>
+          <div className="leaderboard">
+            <div className="table-container">
+              <table className="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Tests Attended</th>
+                    <th>Highest Score</th>
+                    <th>Total Score</th>
+                    <th>Avg. Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaderboardData.map((student, index) => (
+                    <tr key={index} className={index < 3 ? "top-performer" : ""}>
+                      <td>
+                        <div className={`rank ${index < 3 ? "top-rank" : ""}`}>
+                          {index < 3 ? 
+                            <span className="rank-medal">🏆</span> : 
+                            <span>#{index + 1}</span>
+                          }
+                        </div>
+                      </td>
+                      <td>
+                        <div className="student-name">{student.name}</div>
+                      </td>
+                      <td>
+                        <div className="data-cell">{student.testsAttended}</div>
+                      </td>
+                      <td>
+                        <div className="data-cell">{student.highestScore}</div>
+                      </td>
+                      <td>
+                        <div className="data-cell">{student.totalScore}</div>
+                      </td>
+                      <td>
+                        <div className="avg-score">{student.avgScore.toFixed(1)}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         
-        .toggle-mock input {
-          margin-right: 6px;
-        }
-        
-        .loading {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 200px;
-          font-size: 18px;
-          color: #6b7280;
-        }
-
-        /* Button styles */
-        .student-button {
-          background-color: #2563eb;
-          color: white;
-          font-weight: 600;
-          padding: 10px 16px;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          transition: background-color 0.2s;
-        }
-
-        .student-button:hover {
-          background-color: #1d4ed8;
-        }
-
-        .button-icon {
-          margin-left: 6px;
-        }
-
-        .secondary-button {
-          background-color: white;
-          color: #2563eb;
-          border: 1px solid #e5e7eb;
-          border-radius: 6px;
-          padding: 8px 12px;
-          font-size: 14px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .secondary-button:hover {
-          border-color: #2563eb;
-          background-color: #f0f5ff;
-        }
-
-        /* Top boxes styles */
-        .top-boxes {
-          display: grid;
-          grid-template-columns: repeat(1, 1fr);
-          gap: 20px;
-          margin-bottom: 32px;
-        }
-
-        @media (min-width: 640px) {
-          .top-boxes {
-            grid-template-columns: repeat(2, 1fr);
+        <style jsx>{`
+          /* Base styles */
+          .analytics-container {
+            padding: 24px;
+            background-color: #f9fafb;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
           }
-        }
 
-        @media (min-width: 1024px) {
-          .top-boxes {
-            grid-template-columns: repeat(4, 1fr);
+          .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
           }
-        }
 
-        .info-box {
-          background-color: white;
-          border-radius: 12px;
-          padding: 20px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
+          .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+          }
+          
+          .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
+          
+          .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 18px;
+            color: #6b7280;
+          }
 
-        .info-box:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+          /* Button styles */
+          .student-button {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+          }
 
-        .box-label {
-          font-size: 14px;
-          font-weight: 500;
-          color: #6b7280;
-          margin-bottom: 6px;
-        }
+          .student-button:hover {
+            background-color: #1d4ed8;
+          }
 
-        .box-value-container {
-          display: flex;
-          align-items: flex-end;
-        }
+          .button-icon {
+            margin-left: 6px;
+          }
 
-        .box-value {
-          font-size: 32px;
-          font-weight: 700;
-          color: #1f2937;
-        }
+          .secondary-button {
+            background-color: white;
+            color: #2563eb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+          }
 
-        .trend-indicator {
-          font-size: 14px;
-          margin-left: 10px;
-          font-weight: 500;
-        }
+          .secondary-button:hover {
+            border-color: #2563eb;
+            background-color: #f0f5ff;
+          }
 
-        .trend-indicator.positive {
-          color: #10b981;
-        }
+          /* Top boxes styles */
+          .top-boxes {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+          }
 
-        .trend-indicator.negative {
-          color: #ef4444;
-        }
+          @media (min-width: 640px) {
+            .top-boxes {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
 
-        /* Charts section */
-        .charts-section {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 24px;
-          margin-bottom: 32px;
-        }
+          @media (min-width: 1024px) {
+            .top-boxes {
+              grid-template-columns: repeat(4, 1fr);
+            }
+          }
 
-        @media (min-width: 1024px) {
+          .info-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+          }
+
+          .info-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+
+          .box-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            margin-bottom: 6px;
+          }
+
+          .box-value-container {
+            display: flex;
+            align-items: flex-end;
+          }
+
+          .box-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1f2937;
+          }
+
+          .trend-indicator {
+            font-size: 14px;
+            margin-left: 10px;
+            font-weight: 500;
+          }
+
+          .trend-indicator.positive {
+            color: #10b981;
+          }
+
+          .trend-indicator.negative {
+            color: #ef4444;
+          }
+
+          /* Charts section */
           .charts-section {
-            grid-template-columns: 1fr 1fr;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
           }
-        }
 
-        .chart-box {
-          background-color: white;
-          border-radius: 12px;
-          padding: 24px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+          @media (min-width: 1024px) {
+            .charts-section {
+              grid-template-columns: 1fr 1fr;
+            }
+          }
 
-        .chart-title {
-          font-size: 18px;
-          font-weight: 600;
-          color: #1f2937;
-          margin-bottom: 20px;
-        }
+          .chart-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          }
 
-        .chart-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 320px;
-          min-width: 280px;
-        }
+          .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+          }
 
-        /* Leaderboard styles */
-        .leaderboard-section {
-          background-color: white;
-          border-radius: 12px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+          .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 320px;
+            min-width: 280px;
+          }
 
-        .leaderboard-header {
-          padding: 20px;
-          border-bottom: 1px solid #e5e7eb;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
+          /* Leaderboard styles */
+          .leaderboard-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          }
 
-        .section-title {
-          font-size: 20px;
-          font-weight: 600;
-          color: #1f2937;
-          margin: 0;
-        }
+          .leaderboard-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
 
-        .table-container {
-          overflow-x: auto;
-          padding: 0 8px;
-        }
+          .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+          }
 
-        .leaderboard-table {
-          width: 100%;
-          border-collapse: collapse;
-        }
+          .table-container {
+            overflow-x: auto;
+            padding: 0 8px;
+          }
 
-        .leaderboard-table th {
-          padding: 14px 20px;
-          text-align: left;
-          font-size: 12px;
-          font-weight: 600;
-          color: #6b7280;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          background-color: #f9fafb;
-          border-top: 1px solid #e5e7eb;
-          border-bottom: 1px solid #e5e7eb;
-        }
+          .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+          }
 
-        .leaderboard-table td {
-          padding: 16px 20px;
-          white-space: nowrap;
-        }
+          .leaderboard-table th {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+          }
 
-        .leaderboard-table tr {
-          border-bottom: 1px solid #e5e7eb;
-          transition: background-color 0.2s;
-        }
+          .leaderboard-table td {
+            padding: 16px 20px;
+            white-space: nowrap;
+          }
 
-        .leaderboard-table tr:hover {
-          background-color: #f9fafb;
-        }
+          .leaderboard-table tr {
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.2s;
+          }
 
-        .leaderboard-table tbody tr:last-child {
-          border-bottom: none;
-        }
+          .leaderboard-table tr:hover {
+            background-color: #f9fafb;
+          }
 
-        .top-performer {
-          background-color: #f0f9ff;
-        }
+          .leaderboard-table tbody tr:last-child {
+            border-bottom: none;
+          }
 
-        .top-performer:hover {
-          background-color: #e0f2fe !important;
-        }
+          .top-performer {
+            background-color: #f0f9ff;
+          }
 
-        .rank {
-          font-size: 14px;
-          font-weight: 600;
-          color: #4b5563;
-          display: flex;
-          align-items: center;
-        }
+          .top-performer:hover {
+            background-color: #e0f2fe !important;
+          }
 
-        .top-rank {
-          color: #d97706;
-        }
+          .rank {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+          }
 
-        .rank-medal {
-          font-size: 18px;
-          margin-right: 5px;
-        }
+          .top-rank {
+            color: #d97706;
+          }
 
-        .student-name {
-          font-size: 15px;
-          font-weight: 500;
-          color: #1f2937;
-        }
+          .rank-medal {
+            font-size: 18px;
+            margin-right: 5px;
+          }
 
-        .data-cell {
-          font-size: 14px;
-          color: #4b5563;
-        }
+          .student-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1f2937;
+          }
 
-        .avg-score {
-          font-size: 16px;
-          font-weight: 600;
-          color: #2563eb;
-        }
-      `}</style>
-    </div>
+          .data-cell {
+            font-size: 14px;
+            color: #4b5563;
+          }
+
+          .avg-score {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2563eb;
+          }
+        `}</style>
+      </div>
     </ProtectedRoute>
   );
 }

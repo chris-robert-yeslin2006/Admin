@@ -31,6 +31,7 @@ export default function StudentDetailsPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const orgId = searchParams.get('page')
+  // console.log(orgId)
 
   useEffect(() => {
     fetchStudents()
@@ -43,7 +44,8 @@ export default function StudentDetailsPage() {
     try {
       // Get org_id from URL parameter (page) or from cookie as fallback
       const currentOrgId = orgId || Cookies.get('org_id')
-      
+      console.log(Cookies.get('org_id'));
+      console.log('Current Org ID:', currentOrgId)
       if (!currentOrgId) {
         setIsLoading(false)
         setError('No organization ID found')
