@@ -95,11 +95,12 @@
 .dashboardContent {
   flex: 1;
   padding: 20px;
-  overflow-y: auto;
-  scale: 0.8;
+  overflow-y: hidden;
+  scale: 0.78;
   position: relative;
   top: -120px;
-  left: -5%;
+  left: -9%;
+  width: 98vw;
 }
 
 .section {

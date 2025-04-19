@@ -2,8 +2,8 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import ExportModal from "@/components/PDFGeneration/ExportModal"
-import ProtectedRoute from '@/components/ProtectedRoute'
+import ExportModal from "../../../../../../components/PDFGeneration/ExportModal"
+import ProtectedRoute from '../../../../../../components/ProtectedRoute'
 
 export default function StudentListPage() {
   const router = useRouter()

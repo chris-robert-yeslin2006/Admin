@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import BodyOverflowController from "../components/Bodyoverflowcontroller";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <BodyOverflowController/>
         {children}
       </body>
     </html>

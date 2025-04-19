@@ -65,7 +65,6 @@ const Header = () => {
               Pricing
             </a>
             <button className="btn-secondary">Login as Individual</button>
-            <button className="btn-primary">Login as Organization</button>
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
               <ThemeToggle />
             </div>

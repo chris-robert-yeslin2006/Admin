@@ -10,6 +10,14 @@
   flex: 1;
   background-color: #f5f7fa;
 }
+.toggle-button{
+  padding: 7px;
+  margin: 10px;
+  border: 1px solid transparent;
+  background-color: #3b82f6;
+  border-radius:5px ;
+  color: white;
+}
 
 .content-container {
   padding: 32px;
