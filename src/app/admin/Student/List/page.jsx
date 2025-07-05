@@ -33,55 +33,66 @@ export default function StudentDetailsPage() {
   const router = useRouter()
   const userId = Cookies.get('user_id')
   const orgId = Cookies.get('org_id')
-  // console.log(orgId)
+  const language = Cookies.get('language')
+  console.log(orgId)
 
   useEffect(() => {
     fetchStudents()
   }, [userId])
 
-  const fetchStudents = async () => {
-    setIsLoading(true)
-    setError('')
+const fetchStudents = async () => {
+  setIsLoading(true)
+  setError('')
 
-    try {
-      const currAdminId = userId || Cookies.get('user_id')
-      const currOrgId = orgId
-      console.log(Cookies.get('user_id'));
-      console.log('Current User ID:', currAdminId)
-      if (!currAdminId) {
-        setIsLoading(false)
-        setError('No Admin ID found')
-        return
-      }
-
-      console.log('Fetching students for Admin:', currAdminId)
-
-      const res = await fetch(`http://localhost:8000/student/list?user_id=${currAdminId}`)
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch student list')
-      }
-
-      const data = await res.json()
-      console.log('API response:', data)
-
-      // Set students array (will be empty if no students)
-      setStudents(data.students || [])
-
-      // Set organization name from the response
-      if (data.org_name) {
-        setAdminName(data.org_name)
-      } else if (data.students && data.students.length > 0 && data.students[0].organizations) {
-        // Fallback to the old way of getting org name
-        setAdminName(data.students[0].organizations.name)
-      }
-    } catch (err) {
-      console.error('Error fetching students:', err)
-      setError('Failed to load students. Please try again later.')
-    } finally {
+  try {
+    const currAdminId = userId || Cookies.get('user_id')
+    const currOrgId = orgId
+    const currLanguage = language // Get language from cookies
+    
+    console.log('Current User ID:', currAdminId)
+    if (!currAdminId) {
       setIsLoading(false)
+      setError('No Admin ID found')
+      return
     }
+
+    console.log('Fetching students for Admin:', currAdminId)
+
+    // Build the URL with parameters
+    let url = `http://localhost:8000/student/list?user_id=${currAdminId}`
+    if (currOrgId) {
+      url += `&org_id=${currOrgId}`
+    }
+    if (currLanguage) {
+      url += `&language=${currLanguage}`
+    }
+
+    const res = await fetch(url)
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch student list')
+    }
+
+    const data = await res.json()
+    console.log('API response:', data)
+
+    // Set students array (will be empty if no students)
+    setStudents(data.students || [])
+
+    // Set organization name from the response
+    if (data.org_name) {
+      setAdminName(data.org_name)
+    } else if (data.students && data.students.length > 0 && data.students[0].organizations) {
+      // Fallback to the old way of getting org name
+      setAdminName(data.students[0].organizations.name)
+    }
+  } catch (err) {
+    console.error('Error fetching students:', err)
+    setError('Failed to load students. Please try again later.')
+  } finally {
+    setIsLoading(false)
   }
+}
 
   const handleEditClick = (student) => {
     setEditingStudent(student)
