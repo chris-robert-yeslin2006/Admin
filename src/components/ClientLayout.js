@@ -36,7 +36,7 @@ export default function ClientLayout ({ children }) {
   const handleNavChange = section => {
     let routes = {}
     
-    if (role === 'organization') {
+    if (role === 'org') {
       routes = {
         'statistics': '/organization/Statistics',
         'admin-add': '/organization/Admin/Add',

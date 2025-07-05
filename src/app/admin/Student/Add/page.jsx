@@ -29,25 +29,19 @@ export default function AddStudent() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    // Fetch all organization names
-    fetch('http://localhost:8000/admin/list')
-      .then(res => res.json())
-      .then(data => {
-        setOrgs(Array.isArray(data.organizations) ? data.organizations : [])
-      })
-      .catch(err => {
-        console.error('Failed to fetch organizations', err)
-        setError('Could not load organizations')
-      })
       
     // Set org_id from current user's cookie if they are an org user
     const userRole = Cookies.get('role')
     const currUserId = Cookies.get('user_id')
+    const currOrgId = Cookies.get('org_id')
+
+    console.log(currOrgId)
     
     if ((userRole === 'org' || userRole === 'admin') && currUserId) {
       setFormData(prev => ({
         ...prev,
-        user_id: currUserId
+        user_id: currUserId,
+        org_id: currOrgId
       }))
     }
   }, [])
@@ -104,7 +98,7 @@ export default function AddStudent() {
           submitData[field] = parseFloat(submitData[field])
         }
       })
-      
+      console.log(submitData)
       const res = await fetch('http://localhost:8000/student/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

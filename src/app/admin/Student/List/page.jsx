@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import '../Admin.css'  
+import '../Admin.css'
 import ProtectedRoute from '../../../../components/ProtectedRoute'
 import Cookies from 'js-cookie'
 
@@ -14,6 +14,7 @@ export default function StudentDetailsPage() {
   const [editingStudent, setEditingStudent] = useState(null)
   const [editFormData, setEditFormData] = useState({
     name: '',
+    org_id: '',
     language: '',
     email: '',
     password: '',
@@ -27,22 +28,24 @@ export default function StudentDetailsPage() {
   })
   const [deleteConfirmStudent, setDeleteConfirmStudent] = useState(null)
   const [showMarkDetails, setShowMarkDetails] = useState(false)
-  
+
   const searchParams = useSearchParams()
   const router = useRouter()
   const userId = Cookies.get('user_id')
+  const orgId = Cookies.get('org_id')
   // console.log(orgId)
 
   useEffect(() => {
     fetchStudents()
   }, [userId])
-  
+
   const fetchStudents = async () => {
     setIsLoading(true)
     setError('')
-    
+
     try {
       const currAdminId = userId || Cookies.get('user_id')
+      const currOrgId = orgId
       console.log(Cookies.get('user_id'));
       console.log('Current User ID:', currAdminId)
       if (!currAdminId) {
@@ -50,21 +53,21 @@ export default function StudentDetailsPage() {
         setError('No Admin ID found')
         return
       }
-      
+
       console.log('Fetching students for Admin:', currAdminId)
-      
+
       const res = await fetch(`http://localhost:8000/student/list?user_id=${currAdminId}`)
-      
+
       if (!res.ok) {
         throw new Error('Failed to fetch student list')
       }
-      
+
       const data = await res.json()
       console.log('API response:', data)
-      
+
       // Set students array (will be empty if no students)
       setStudents(data.students || [])
-  
+
       // Set organization name from the response
       if (data.org_name) {
         setAdminName(data.org_name)
@@ -79,10 +82,10 @@ export default function StudentDetailsPage() {
       setIsLoading(false)
     }
   }
-  
+
   const handleEditClick = (student) => {
     setEditingStudent(student)
-    
+
     // Initialize form with student data
     setEditFormData({
       name: student.name || '',
@@ -97,19 +100,19 @@ export default function StudentDetailsPage() {
       sentence_mastery: student.sentence_mastery || '',
       pronunciation: student.pronunciation || ''
     })
-    
+
     // Check if any mark field has a value to determine if mark details should be shown
-    const hasMarks = ['overall_mark', 'average_mark', 'recent_test_mark', 
-                      'fluency_mark', 'vocab_mark', 'sentence_mastery', 'pronunciation']
-                      .some(field => student[field] !== null && student[field] !== undefined && student[field] !== '')
-    
+    const hasMarks = ['overall_mark', 'average_mark', 'recent_test_mark',
+      'fluency_mark', 'vocab_mark', 'sentence_mastery', 'pronunciation']
+      .some(field => student[field] !== null && student[field] !== undefined && student[field] !== '')
+
     setShowMarkDetails(hasMarks)
   }
-  
+
   const handleDeleteClick = (student) => {
     setDeleteConfirmStudent(student)
   }
-  
+
   const handleFormChange = (e) => {
     const { name, value } = e.target
     setEditFormData(prev => ({
@@ -117,23 +120,23 @@ export default function StudentDetailsPage() {
       [name]: value
     }))
   }
-  
+
   const toggleMarkDetails = () => {
     setShowMarkDetails(!showMarkDetails)
   }
-  
+
   const handleEditSubmit = async (e) => {
     e.preventDefault()
     setError('')
-    
+
     try {
       // Prepare data for submission
       const submitData = { ...editFormData }
-      
+
       // Convert empty mark strings to null and string values to numbers
-      const markFields = ['overall_mark', 'average_mark', 'recent_test_mark', 
-                          'fluency_mark', 'vocab_mark', 'sentence_mastery', 'pronunciation']
-      
+      const markFields = ['overall_mark', 'average_mark', 'recent_test_mark',
+        'fluency_mark', 'vocab_mark', 'sentence_mastery', 'pronunciation']
+
       markFields.forEach(field => {
         if (submitData[field] === '') {
           submitData[field] = null
@@ -142,12 +145,12 @@ export default function StudentDetailsPage() {
           submitData[field] = parseFloat(submitData[field])
         }
       })
-      
+
       // If password is empty, remove it from the request
       if (!submitData.password) {
         delete submitData.password
       }
-      
+
       const res = await fetch(`http://localhost:8000/student/${editingStudent.id}`, {
         method: 'PUT',
         headers: {
@@ -155,20 +158,20 @@ export default function StudentDetailsPage() {
         },
         body: JSON.stringify(submitData)
       })
-      
+
       if (!res.ok) {
         throw new Error('Failed to update student')
       }
-      
+
       // Update the student in the local state
-      setStudents(prev => 
-        prev.map(student => 
-          student.id === editingStudent.id 
-            ? { ...student, ...submitData } 
+      setStudents(prev =>
+        prev.map(student =>
+          student.id === editingStudent.id
+            ? { ...student, ...submitData }
             : student
         )
       )
-      
+
       // Close the edit modal
       setEditingStudent(null)
     } catch (err) {
@@ -176,22 +179,22 @@ export default function StudentDetailsPage() {
       setError('Failed to update student. Please try again.')
     }
   }
-  
+
   const handleDeleteConfirm = async () => {
     setError('')
-    
+
     try {
       const res = await fetch(`http://localhost:8000/student/${deleteConfirmStudent.id}`, {
         method: 'DELETE'
       })
-      
+
       if (!res.ok) {
         throw new Error('Failed to delete student')
       }
-      
+
       // Remove the student from the local state
       setStudents(prev => prev.filter(student => student.id !== deleteConfirmStudent.id))
-      
+
       // Close the delete confirmation modal
       setDeleteConfirmStudent(null)
     } catch (err) {
@@ -211,20 +214,20 @@ export default function StudentDetailsPage() {
       <div className="content-container">
         <div className="admin-header">
           <h1 className="page-title">Student Management</h1>
-          <button 
+          <button
             className="primary-button"
             onClick={() => router.push(`/organization/Student/Add?user_id=${userId}`)}
           >
             Add New Student
           </button>
         </div>
-        
+
         {AdminName && (
           <div className="form-container" style={{ marginBottom: '24px' }}>
             <h2 className="page-title" style={{ margin: 0 }}>Organization: {AdminName}</h2>
           </div>
         )}
-        
+
         {error && (
           <div className="error-message">
             <svg
@@ -245,7 +248,7 @@ export default function StudentDetailsPage() {
             <span>{error}</span>
           </div>
         )}
-        
+
         {isLoading ? (
           <div className="loading-container">
             <div className="spinner"></div>
@@ -270,7 +273,7 @@ export default function StudentDetailsPage() {
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             <p>No students found for this organization.</p>
-            <button 
+            <button
               className="primary-button"
               onClick={() => router.push(`/organization/Student/Add?user_id=${userId}`)}
             >
@@ -299,7 +302,7 @@ export default function StudentDetailsPage() {
                     <td>{formatMark(student.overall_mark)}</td>
                     <td>{new Date(student.created_at).toLocaleDateString()}</td>
                     <td className="action-buttons">
-                      <button 
+                      <button
                         className="edit-button"
                         onClick={() => handleEditClick(student)}
                       >
@@ -319,7 +322,7 @@ export default function StudentDetailsPage() {
                         </svg>
                         Edit
                       </button>
-                      <button 
+                      <button
                         className="delete-button"
                         onClick={() => handleDeleteClick(student)}
                       >
@@ -346,14 +349,14 @@ export default function StudentDetailsPage() {
             </table>
           </div>
         )}
-        
+
         {/* Edit Student Modal */}
         {editingStudent && (
           <div className="modal-overlay">
             <div className="modal-content">
               <div className="modal-header">
                 <h3>Edit Student</h3>
-                <button 
+                <button
                   className="close-button"
                   onClick={() => setEditingStudent(null)}
                 >
@@ -373,11 +376,11 @@ export default function StudentDetailsPage() {
                   </svg>
                 </button>
               </div>
-              
+
               <form onSubmit={handleEditSubmit} className="edit-form">
                 <div className="form-section">
                   <h4>Student Information</h4>
-                  
+
                   <div className="form-field">
                     <label className="form-label">Student Name</label>
                     <input
@@ -390,7 +393,7 @@ export default function StudentDetailsPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-field">
                     <label className="form-label">Email Address</label>
                     <input
@@ -403,7 +406,7 @@ export default function StudentDetailsPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-field">
                     <label className="form-label">Preferred Language</label>
                     <div className="select-wrapper">
@@ -424,7 +427,7 @@ export default function StudentDetailsPage() {
                       </select>
                     </div>
                   </div>
-                  
+
                   <div className="form-field">
                     <label className="form-label">Password (leave blank to keep current)</label>
                     <input
@@ -437,7 +440,7 @@ export default function StudentDetailsPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="form-section">
                   <div className="section-header">
                     <h4>Performance Marks</h4>
@@ -449,7 +452,7 @@ export default function StudentDetailsPage() {
                       {showMarkDetails ? 'Hide Details' : 'Show Details'}
                     </button>
                   </div>
-                  
+
                   <div className="form-field">
                     <label className="form-label">Overall Mark</label>
                     <input
@@ -464,7 +467,7 @@ export default function StudentDetailsPage() {
                       placeholder="Enter overall mark (0-100)"
                     />
                   </div>
-                  
+
                   {showMarkDetails && (
                     <>
                       <div className="form-field">
@@ -481,7 +484,7 @@ export default function StudentDetailsPage() {
                           placeholder="Enter average mark (0-100)"
                         />
                       </div>
-                      
+
                       <div className="form-field">
                         <label className="form-label">Recent Test Mark</label>
                         <input
@@ -496,7 +499,7 @@ export default function StudentDetailsPage() {
                           placeholder="Enter recent test mark (0-100)"
                         />
                       </div>
-                      
+
                       <div className="form-fields-row">
                         <div className="form-field">
                           <label className="form-label">Fluency</label>
@@ -512,7 +515,7 @@ export default function StudentDetailsPage() {
                             placeholder="0-100"
                           />
                         </div>
-                        
+
                         <div className="form-field">
                           <label className="form-label">Vocabulary</label>
                           <input
@@ -528,7 +531,7 @@ export default function StudentDetailsPage() {
                           />
                         </div>
                       </div>
-                      
+
                       <div className="form-fields-row">
                         <div className="form-field">
                           <label className="form-label">Sentence Mastery</label>
@@ -544,7 +547,7 @@ export default function StudentDetailsPage() {
                             placeholder="0-100"
                           />
                         </div>
-                        
+
                         <div className="form-field">
                           <label className="form-label">Pronunciation</label>
                           <input
@@ -563,7 +566,7 @@ export default function StudentDetailsPage() {
                     </>
                   )}
                 </div>
-                
+
                 <div className="form-actions">
                   <button
                     type="button"
@@ -583,14 +586,14 @@ export default function StudentDetailsPage() {
             </div>
           </div>
         )}
-        
+
         {/* Delete Confirmation Modal */}
         {deleteConfirmStudent && (
           <div className="modal-overlay">
             <div className="modal-content delete-confirm">
               <div className="modal-header">
                 <h3>Confirm Deletion</h3>
-                <button 
+                <button
                   className="close-button"
                   onClick={() => setDeleteConfirmStudent(null)}
                 >
@@ -610,7 +613,7 @@ export default function StudentDetailsPage() {
                   </svg>
                 </button>
               </div>
-              
+
               <div className="confirm-message">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -631,7 +634,7 @@ export default function StudentDetailsPage() {
                 <p>Are you sure you want to delete <strong>{deleteConfirmStudent.name}</strong>?</p>
                 <p className="warning-text">This action cannot be undone. The student account will be permanently removed from the system.</p>
               </div>
-              
+
               <div className="form-actions">
                 <button
                   type="button"
