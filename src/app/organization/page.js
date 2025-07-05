@@ -2,8 +2,8 @@
 import Head from 'next/head';
 import StatisticsSection from './Statistics/page';
 import { useState } from 'react';
-import '../../components/ProtectedRoute'
-import ProtectedRoute from '../../components/ProtectedRoute';
+import '@/components/ProtectedRoute'
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('statistics');
@@ -51,20 +51,6 @@ export default function Dashboard() {
           
           .main-content {
             overflow-y: auto;
-          }
-        `}</style>
-
-        <style jsx global>{`
-          html,
-          body {
-            padding: 0;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-              Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-          }
-          
-          * {
-            box-sizing: border-box;
           }
         `}</style>
       </div>

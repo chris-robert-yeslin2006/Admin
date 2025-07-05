@@ -8,7 +8,7 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "noEmit": true,
     "incremental": true,
     "module": "esnext",
@@ -31,5 +31,14 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "baseUrl": ".",
+  "paths": {
+    "@": [
+      "src/"
+    ],
+    "@/*": [
+      "src/*"
+    ],
+  }
 }

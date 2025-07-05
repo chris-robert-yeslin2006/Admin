@@ -19,6 +19,7 @@ export default function ClientLayout({ children }) {
     const role = Cookies.get('role') || '';
     const token = Cookies.get('token');
     const email = Cookies.get('email') || '';
+    console.log("User Role" , role)
 
     setUserProfile({
       avatar: '👤',
