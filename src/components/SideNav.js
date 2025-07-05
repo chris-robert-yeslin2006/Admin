@@ -16,8 +16,8 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
       [item]: !expandedItems[item]
     })
   }
-
-  const isOrganization = userProfile.role === 'organization'
+  const isOrganization = userProfile.role === 'org'
+  console.log(isOrganization)
 
   return (
     <div className='sidebar'>
@@ -41,7 +41,7 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
             <span>Statistics</span>
           </li>
 
-          {isOrganization ?? (
+          {isOrganization && (
             <li
               className={`nav-item ${
                 activeSection.startsWith('admin') ? 'active' : ''

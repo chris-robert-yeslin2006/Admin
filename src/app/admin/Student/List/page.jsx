@@ -2,13 +2,13 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import '../Admin.css'  // Reusing your admin styles
+import '../Admin.css'  
 import ProtectedRoute from '../../../../components/ProtectedRoute'
 import Cookies from 'js-cookie'
 
 export default function StudentDetailsPage() {
   const [students, setStudents] = useState([])
-  const [orgName, setOrgName] = useState('')
+  const [AdminName, setAdminName] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [editingStudent, setEditingStudent] = useState(null)
@@ -30,31 +30,30 @@ export default function StudentDetailsPage() {
   
   const searchParams = useSearchParams()
   const router = useRouter()
-  const orgId = searchParams.get('page')
+  const userId = Cookies.get('user_id')
   // console.log(orgId)
 
   useEffect(() => {
     fetchStudents()
-  }, [orgId])
+  }, [userId])
   
   const fetchStudents = async () => {
     setIsLoading(true)
     setError('')
     
     try {
-      // Get org_id from URL parameter (page) or from cookie as fallback
-      const currentOrgId = orgId || Cookies.get('org_id')
-      console.log(Cookies.get('org_id'));
-      console.log('Current Org ID:', currentOrgId)
-      if (!currentOrgId) {
+      const currAdminId = userId || Cookies.get('user_id')
+      console.log(Cookies.get('user_id'));
+      console.log('Current User ID:', currAdminId)
+      if (!currAdminId) {
         setIsLoading(false)
-        setError('No organization ID found')
+        setError('No Admin ID found')
         return
       }
       
-      console.log('Fetching students for organization:', currentOrgId)
+      console.log('Fetching students for Admin:', currAdminId)
       
-      const res = await fetch(`http://localhost:8000/student/list?org_id=${currentOrgId}`)
+      const res = await fetch(`http://localhost:8000/student/list?user_id=${currAdminId}`)
       
       if (!res.ok) {
         throw new Error('Failed to fetch student list')
@@ -68,10 +67,10 @@ export default function StudentDetailsPage() {
   
       // Set organization name from the response
       if (data.org_name) {
-        setOrgName(data.org_name)
+        setAdminName(data.org_name)
       } else if (data.students && data.students.length > 0 && data.students[0].organizations) {
         // Fallback to the old way of getting org name
-        setOrgName(data.students[0].organizations.name)
+        setAdminName(data.students[0].organizations.name)
       }
     } catch (err) {
       console.error('Error fetching students:', err)
@@ -214,15 +213,15 @@ export default function StudentDetailsPage() {
           <h1 className="page-title">Student Management</h1>
           <button 
             className="primary-button"
-            onClick={() => router.push(`/organization/Student/Add?org_id=${orgId}`)}
+            onClick={() => router.push(`/organization/Student/Add?user_id=${userId}`)}
           >
             Add New Student
           </button>
         </div>
         
-        {orgName && (
+        {AdminName && (
           <div className="form-container" style={{ marginBottom: '24px' }}>
-            <h2 className="page-title" style={{ margin: 0 }}>Organization: {orgName}</h2>
+            <h2 className="page-title" style={{ margin: 0 }}>Organization: {AdminName}</h2>
           </div>
         )}
         
@@ -273,7 +272,7 @@ export default function StudentDetailsPage() {
             <p>No students found for this organization.</p>
             <button 
               className="primary-button"
-              onClick={() => router.push(`/organization/Student/Add?org_id=${orgId}`)}
+              onClick={() => router.push(`/organization/Student/Add?user_id=${userId}`)}
             >
               Add Your First Student
             </button>

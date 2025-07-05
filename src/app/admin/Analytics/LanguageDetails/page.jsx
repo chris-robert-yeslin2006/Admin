@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import BarChart from '../../Statistics/BarChart';
 import DonutChart from '../../Statistics/DonutChart';
 import ProtectedRoute from '../../../../components/ProtectedRoute';
@@ -9,14 +9,14 @@ import Cookies from 'js-cookie';
 
 // Mock data constants for fallback
 const MOCK_STUDENTS = [
-  { id: '1', name: "Alex Johnson", org_id: '123', email: "alex@example.com", language: "English", overall_mark: 82.8, average_mark: 82.8, recent_test_mark: 85, fluency_mark: 80, vocab_mark: 84, sentence_mastery: 83, pronunciation: 82 },
-  { id: '2', name: "Samantha Lee", org_id: '123', email: "samantha@example.com", language: "English", overall_mark: 90.0, average_mark: 90.0, recent_test_mark: 92, fluency_mark: 89, vocab_mark: 91, sentence_mastery: 90, pronunciation: 88 },
-  { id: '3', name: "Michael Chen", org_id: '123', email: "michael@example.com", language: "English", overall_mark: 85.0, average_mark: 85.0, recent_test_mark: 83, fluency_mark: 86, vocab_mark: 85, sentence_mastery: 84, pronunciation: 87 },
-  { id: '4', name: "Taylor Moore", org_id: '123', email: "taylor@example.com", language: "English", overall_mark: 85.0, average_mark: 85.0, recent_test_mark: 86, fluency_mark: 84, vocab_mark: 86, sentence_mastery: 85, pronunciation: 84 },
-  { id: '5', name: "Jordan Smith", org_id: '123', email: "jordan@example.com", language: "English", overall_mark: 80.0, average_mark: 80.0, recent_test_mark: 82, fluency_mark: 79, vocab_mark: 81, sentence_mastery: 80, pronunciation: 78 },
-  { id: '6', name: "Emma Williams", org_id: '123', email: "emma@example.com", language: "English", overall_mark: 91.0, average_mark: 91.0, recent_test_mark: 89, fluency_mark: 92, vocab_mark: 90, sentence_mastery: 91, pronunciation: 93 },
-  { id: '7', name: "Noah Brown", org_id: '123', email: "noah@example.com", language: "English", overall_mark: 84.0, average_mark: 84.0, recent_test_mark: 85, fluency_mark: 83, vocab_mark: 84, sentence_mastery: 85, pronunciation: 83 },
-  { id: '8', name: "Olivia Davis", org_id: '123', email: "olivia@example.com", language: "English", overall_mark: 88.0, average_mark: 88.0, recent_test_mark: 87, fluency_mark: 89, vocab_mark: 88, sentence_mastery: 87, pronunciation: 89 },
+  { id: '1', name: "Alex Johnson", email: "alex@example.com", overall_mark: 82.8, average_mark: 82.8, recent_test_mark: 85, fluency_mark: 80, vocab_mark: 84, sentence_mastery: 83, pronunciation: 82 },
+  { id: '2', name: "Samantha Lee", email: "samantha@example.com", overall_mark: 90.0, average_mark: 90.0, recent_test_mark: 92, fluency_mark: 89, vocab_mark: 91, sentence_mastery: 90, pronunciation: 88 },
+  { id: '3', name: "Michael Chen", email: "michael@example.com", overall_mark: 85.0, average_mark: 85.0, recent_test_mark: 83, fluency_mark: 86, vocab_mark: 85, sentence_mastery: 84, pronunciation: 87 },
+  { id: '4', name: "Taylor Moore", email: "taylor@example.com", overall_mark: 85.0, average_mark: 85.0, recent_test_mark: 86, fluency_mark: 84, vocab_mark: 86, sentence_mastery: 85, pronunciation: 84 },
+  { id: '5', name: "Jordan Smith", email: "jordan@example.com", overall_mark: 80.0, average_mark: 80.0, recent_test_mark: 82, fluency_mark: 79, vocab_mark: 81, sentence_mastery: 80, pronunciation: 78 },
+  { id: '6', name: "Emma Williams", email: "emma@example.com", overall_mark: 91.0, average_mark: 91.0, recent_test_mark: 89, fluency_mark: 92, vocab_mark: 90, sentence_mastery: 91, pronunciation: 93 },
+  { id: '7', name: "Noah Brown", email: "noah@example.com", overall_mark: 84.0, average_mark: 84.0, recent_test_mark: 85, fluency_mark: 83, vocab_mark: 84, sentence_mastery: 85, pronunciation: 83 },
+  { id: '8', name: "Olivia Davis", email: "olivia@example.com", overall_mark: 88.0, average_mark: 88.0, recent_test_mark: 87, fluency_mark: 89, vocab_mark: 88, sentence_mastery: 87, pronunciation: 89 },
 ];
 
 const MOCK_SUMMARY = {
@@ -29,7 +29,6 @@ const MOCK_SUMMARY = {
 };
 
 const MOCK_LANGUAGE_DETAILS = {
-  language_name: "English",
   total_students: 1480,
   active_students: 1245,
   tests_conducted: 58,
@@ -38,27 +37,26 @@ const MOCK_LANGUAGE_DETAILS = {
 
 export default function AnalyticsPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const language = searchParams.get('language');
+  const language = Cookies.get('language');
   
   // State for storing data
   const [loading, setLoading] = useState(true);
   const [studentData, setStudentData] = useState([]);
   const [summaryData, setSummaryData] = useState({});
   const [languageDetails, setLanguageDetails] = useState({});
-  const [orgId, setOrgId] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     // Get org_id from cookies
-    const orgIdFromCookie = Cookies.get('language');
-    if (orgIdFromCookie) {
-      setOrgId(orgIdFromCookie);
+    const userIdFromCookie = Cookies.get('user_id');
+    if (userIdFromCookie) {
+      setUserId(userIdFromCookie);
     }
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!orgId || !language) {
+      if (!userId || !language) {
         setLoading(false);
         return;
       }
@@ -71,17 +69,17 @@ export default function AnalyticsPage() {
           const API_BASE_URL = 'http://localhost:8000';
           
           // Fetch students
-          const studentsResponse = await fetch(`${API_BASE_URL}/analytics/students?org_id=${orgId}&language=${language}`);
+          const studentsResponse = await fetch(`${API_BASE_URL}/analytics/students?user_id=${userId}`);
           const studentsData = await studentsResponse.json();
           console.log("Students Data:", studentsData);
           
           // Fetch summary
-          const summaryResponse = await fetch(`${API_BASE_URL}/analytics/summary?org_id=${orgId}&language=${language}`);
+          const summaryResponse = await fetch(`${API_BASE_URL}/analytics/summary?user_id=${userId}`);
           const summaryData = await summaryResponse.json();
           console.log("Summary Data:", summaryData);
           
           // Fetch language details
-          const detailsResponse = await fetch(`${API_BASE_URL}/analytics/language-detail?org_id=${orgId}&language=${language}`);
+          const detailsResponse = await fetch(`${API_BASE_URL}/analytics/language-detail?user_id=${userId}`);
           const detailsData = await detailsResponse.json();
           console.log("Language Details Data:", detailsData);
           
@@ -103,7 +101,7 @@ export default function AnalyticsPage() {
     };
     
     fetchData();
-  }, [orgId, language]);
+  }, [userId, language]);
 
   // Calculate pass percentage data for the donut chart
   const calculatePassData = () => {
@@ -188,14 +186,14 @@ export default function AnalyticsPage() {
   const testCount = languageDetails.tests_conducted || 58;
 
   const handleViewStudents = () => {
-    if (orgId) {
-      router.push(`LanguageDetails/StudentList?orgId=${orgId}&language=${language}`);
+    if (userId) {
+      router.push(`LanguageDetails/StudentList?user_id=${userId}`);
     }
   };
 
   const handleViewRankings = () => {
-    if (orgId) {
-      router.push(`/Dashboard/Analytics/List/LanguageList/LanguageDetails/StudentList?orgId=${orgId}&language=${language}&sort=topPerformers`);
+    if (userId) {
+      router.push(`LanguageList/LanguageDetails/StudentList?user_id=${userId}&sort=topPerformers`);
     }
   };
 

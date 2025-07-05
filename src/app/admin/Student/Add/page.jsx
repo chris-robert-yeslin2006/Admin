@@ -30,7 +30,7 @@ export default function AddStudent() {
 
   useEffect(() => {
     // Fetch all organization names
-    fetch('http://localhost:8000/organization/list')
+    fetch('http://localhost:8000/admin/list')
       .then(res => res.json())
       .then(data => {
         setOrgs(Array.isArray(data.organizations) ? data.organizations : [])
@@ -42,12 +42,12 @@ export default function AddStudent() {
       
     // Set org_id from current user's cookie if they are an org user
     const userRole = Cookies.get('role')
-    const currentOrgId = Cookies.get('org_id')
+    const currUserId = Cookies.get('user_id')
     
-    if ((userRole === 'org' || userRole === 'admin') && currentOrgId) {
+    if ((userRole === 'org' || userRole === 'admin') && currUserId) {
       setFormData(prev => ({
         ...prev,
-        org_id: currentOrgId
+        user_id: currUserId
       }))
     }
   }, [])
@@ -128,7 +128,6 @@ export default function AddStudent() {
       setFormData({
         name: '',
         org_id: formData.org_id,
-        language: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -224,26 +223,7 @@ export default function AddStudent() {
                     />
                   </div>
                   
-                  <div className='form-field'>
-                    <label className='form-label'>Preferred Language</label>
-                    <div className='select-wrapper'>
-                      <select
-                        name='language'
-                        value={formData.language}
-                        onChange={handleChange}
-                        className='form-input form-select'
-                        required
-                      >
-                        <option value=''>Select Language</option>
-                        <option value='English'>English</option>
-                        <option value='Japanese'>Japanese</option>
-                        <option value='Mandarin'>Mandarin</option>
-                        <option value='German'>German</option>
-                        <option value='Spanish'>Spanish</option>
-                        <option value='French'>French</option>
-                      </select>
-                    </div>
-                  </div>
+      
 
                   <div className='form-field'>
                     <label className='form-label'>Email Address</label>
