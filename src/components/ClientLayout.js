@@ -1,54 +1,65 @@
-'use client';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import SideNav from './SideNav';
-import Cookies from 'js-cookie';
+'use client'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import SideNav from './SideNav'
+import Cookies from 'js-cookie'
 
-export default function ClientLayout({ children }) {
-  const pathname = usePathname();
-  const router = useRouter();
+export default function ClientLayout ({ children }) {
+  const pathname = usePathname()
+  const router = useRouter()
+  const role = Cookies.get('role')
   const [userProfile, setUserProfile] = useState({
     avatar: '👤',
     name: 'Loading...',
     email: '',
     role: ''
-  });
+  })
 
   useEffect(() => {
-    const username = Cookies.get('username') || 'User';
-    const role = Cookies.get('role') || '';
-    const token = Cookies.get('token');
-    const email = Cookies.get('email') || '';
-    console.log("User Role" , role)
+    const username = Cookies.get('username') || 'User'
+    const token = Cookies.get('token')
+    const email = Cookies.get('email') || ''
+    console.log('User Role', role)
 
     setUserProfile({
       avatar: '👤',
       name: username,
       email: email,
       role: role
-    });
+    })
 
     if (!token) {
-      router.push('/');
+      router.push('/')
     }
-  }, [router]);
+  }, [router])
 
-  const handleNavChange = (section) => {
-    const routes = {
-      'statistics': '/organization/Statistics',
-      'admin-add': '/organization/Admin/Add',
-      'admin-list': '/organization/Admin/AdminDetails',
-      'student-add': '/organization/Student/Add',
-      'student-list': '/organization/Student/List',
-      'analytics': '/organization/Analytics/List',
-      'contentManagement': '/organization/Content',
-      'systemSettings': '/organization/Settings',
-    };
-
+  const handleNavChange = section => {
+    let routes = {}
+    
+    if (role === 'organization') {
+      routes = {
+        'statistics': '/organization/Statistics',
+        'admin-add': '/organization/Admin/Add',
+        'admin-list': '/organization/Admin/AdminDetails',
+        'student-add': '/organization/Student/Add',
+        'student-list': '/organization/Student/List',
+        'analytics': '/organization/Analytics/List',
+        "contentManagement": '/organization/Content',
+        'systemSettings': '/organization/Settings'
+      }
+    } else {
+      routes = {
+        'statistics': '/admin/Statistics',
+        'student-add': '/admin/Student/Add',
+        'student-list': '/admin/Student/List',
+        'analytics': '/admin/Analytics/LanguageDetails',
+      }
+    }
+    
     if (routes[section]) {
-      router.push(routes[section]);
+      router.push(routes[section])
     }
-  };
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
@@ -59,9 +70,7 @@ export default function ClientLayout({ children }) {
           userProfile={userProfile}
         />
       </div>
-      <main style={{ flex: 1 }}>
-        {children}
-      </main>
+      <main style={{ flex: 1 }}>{children}</main>
     </div>
-  );
+  )
 }

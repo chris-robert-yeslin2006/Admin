@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import BarChart from '../../../Statistics/BarChart';
-import DonutChart from '../../../Statistics/DonutChart';
-import ProtectedRoute from '../../../../../components/ProtectedRoute';
+import BarChart from '../../Statistics/BarChart';
+import DonutChart from '../../Statistics/DonutChart';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
 import Cookies from 'js-cookie';
 
 // Mock data constants for fallback
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     // Get org_id from cookies
-    const orgIdFromCookie = Cookies.get('org_id');
+    const orgIdFromCookie = Cookies.get('language');
     if (orgIdFromCookie) {
       setOrgId(orgIdFromCookie);
     }
