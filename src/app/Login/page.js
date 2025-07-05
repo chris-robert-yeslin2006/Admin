@@ -55,6 +55,9 @@ const Login = () => {
         Cookies.set('token', result.access_token, { secure: true });
         Cookies.set('role', result.role, { secure: true });
         Cookies.set('username', result.username, { secure: true });
+        Cookies.set('org_id', result.org_id, { secure: true });
+        Cookies.set('language', result.language, { secure: true });
+        Cookies.set('user_id', result.user_id, { secure: true });
         
         
         // For org users, ensure org_id is present

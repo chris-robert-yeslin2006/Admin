@@ -2,8 +2,8 @@
 import Head from 'next/head';
 import StatisticsSection from './Statistics/page';
 import { useState } from 'react';
-import '@/components/ProtectedRoute'
-import ProtectedRoute from '@/components/ProtectedRoute';
+import '../../components/ProtectedRoute'
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('statistics');
