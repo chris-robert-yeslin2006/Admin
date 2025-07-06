@@ -199,7 +199,6 @@ const fetchAIDescriptions = async (score, skillType, studentName) => {
   }
 }
 
-// Fallback function for descriptions if AI fails
 const getFallbackDescription = (skillType, level) => {
   // We'll use your existing static descriptions as fallback
   return getDescription(getCEFRLevel(level === 'low' ? 30 : level === 'medium' ? 60 : 80), skillType)
