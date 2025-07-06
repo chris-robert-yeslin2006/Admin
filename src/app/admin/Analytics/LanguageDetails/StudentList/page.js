@@ -9,7 +9,7 @@ import Cookies from 'js-cookie'
 export default function StudentListPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const orgId = searchParams.get('user_id')
+  const orgId = Cookies.get('org_id')
   const language = Cookies.get('language')
   const [testData, setTestData] = useState({
     candidateName: "",
@@ -65,7 +65,7 @@ export default function StudentListPage() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/analytics/students?user_id=${userId}`)
+        const res = await fetch(`http://localhost:8000/analytics/students?org_id=${orgId}&language=${language}`)
         const data = await res.json()
         
         if (!data) {

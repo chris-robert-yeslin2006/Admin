@@ -34,14 +34,17 @@ export default function AddStudent() {
     const userRole = Cookies.get('role')
     const currUserId = Cookies.get('user_id')
     const currOrgId = Cookies.get('org_id')
+    const currLanguage = Cookies.get('language')
 
     console.log(currOrgId)
+    console.log(currLanguage)
     
     if ((userRole === 'org' || userRole === 'admin') && currUserId) {
       setFormData(prev => ({
         ...prev,
         user_id: currUserId,
-        org_id: currOrgId
+        org_id: currOrgId,
+        language: currLanguage
       }))
     }
   }, [])

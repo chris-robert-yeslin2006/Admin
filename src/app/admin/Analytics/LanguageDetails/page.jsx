@@ -155,13 +155,18 @@ export default function AnalyticsPage() {
     if (!studentData.length) return [];
 
     return studentData
-      .map(student => ({
-        name: student.name,
-        testsAttended: Math.floor(Math.random() * 10) + 40, // Random tests attended for mock data
-        highestScore: student.overall_mark,
-        totalScore: Math.round(student.overall_mark * (Math.random() * 30 + 70)), // Random total score
-        avgScore: student.average_mark || student.overall_mark
-      }))
+      .map(student => {
+        // Safely calculate avgScore with fallback to 0 if both values are null/undefined
+        const avgScore = student.average_mark || student.overall_mark || 0;
+        
+        return {
+          name: student.name,
+          testsAttended: Math.floor(Math.random() * 10) + 40, // Random tests attended for mock data
+          highestScore: student.overall_mark || 0,
+          totalScore: Math.round((student.overall_mark || 0) * (Math.random() * 30 + 70)), // Random total score
+          avgScore: avgScore
+        };
+      })
       .sort((a, b) => b.avgScore - a.avgScore)
       .slice(0, 8);
   };
@@ -184,7 +189,7 @@ export default function AnalyticsPage() {
 
   const studentCount = languageDetails.total_students || studentData.length || 1480;
   const overallAvgScore = summaryData.avg_overall || (studentData.length > 0 ?
-    studentData.reduce((sum, student) => sum + student.overall_mark, 0) / studentData.length : 84.5);
+    studentData.reduce((sum, student) => sum + (student.overall_mark || 0), 0) / studentData.length : 84.5);
   const testCount = languageDetails.tests_conducted || 58;
 
   const handleViewStudents = () => {
