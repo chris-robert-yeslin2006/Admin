@@ -53,6 +53,8 @@ export default function ClientLayout ({ children }) {
         'student-add': '/admin/Student/Add',
         'student-list': '/admin/Student/List',
         'analytics': '/admin/Analytics/LanguageDetails',
+        'test-schedule-add': '/admin/testSchedule/add',
+        'test-schedule-list': '/admin/testSchedule/list'
       }
     }
     

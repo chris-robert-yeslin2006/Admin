@@ -7,7 +7,8 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
   const [expandedItems, setExpandedItems] = useState({
     organizations: false,
     admin: false,
-    student: false
+    student: false,
+    testSchedule: false // Add this for test schedule expansion
   })
 
   const toggleExpand = item => {
@@ -133,19 +134,38 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
           )}
 
           {!isOrganization && (
-             <li
+            <li
               className={`nav-item ${
-                activeSection === 'test-schedule' ? 'active' : ''
+                activeSection.startsWith('test-schedule') ? 'active' : ''
               }`}
-              onClick={() => onNavChange('test-schedule')}
             >
-              <i>⚙️</i>
-              <span>Test Schedule</span>
+              <div className='nav-toggle'>
+                <div className='nav-label'>
+                  <i>📅</i>
+                  <span>Test Schedule</span>
+                </div>
+              </div>
+
+              <ul className='sub-nav'>
+                <li
+                  className={activeSection === 'test-schedule-add' ? 'active' : ''}
+                  onClick={() => onNavChange('test-schedule-add')}
+                >
+                  Schedule Test
+                </li>
+                <li
+                  className={activeSection === 'test-schedule-list' ? 'active' : ''}
+                  onClick={() => onNavChange('test-schedule-list')}
+                >
+                  List of Tests
+                </li>
+              </ul>
             </li>
           )}
         </ul>
       </div>
 
+      {/* Keep all existing styles */}
       <style jsx>{`
         .sidebar {
           background: linear-gradient(
