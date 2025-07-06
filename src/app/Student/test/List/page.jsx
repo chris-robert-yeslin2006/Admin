@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import styles from './TestList.module.css';
-
+import Cookies from 'js-cookie';
 const TestList = () => {
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,28 +12,38 @@ const TestList = () => {
   }, []);
 
   const fetchTests = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/student-tests/upcoming', {
-        method: 'GET',
-        credentials: 'include', // Include cookies
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  try {
+    setLoading(true);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const user_id = Cookies.get("user_id");
+    const language = Cookies.get("language");
+    console.log("User ID:", user_id);
+    console.log("Language:", language);
 
-      const data = await response.json();
-      setTests(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+
+    if (!user_id || !language) {
+      throw new Error("Missing user authentication info");
     }
-  };
+
+    const response = await fetch(`http://localhost:8000/student-tests/upcoming?user_id=${user_id}&language=${language}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setTests(data);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
