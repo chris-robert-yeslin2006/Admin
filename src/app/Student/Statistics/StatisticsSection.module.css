@@ -1,0 +1,759 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  position: relative;
+  top: 0;
+  left: 0;
+  overflow-y: hidden;
+}
+
+/* Header styling */
+.header {
+  height: var(--header-height);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 100%;
+}
+
+.headerTitle h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  background: linear-gradient(135deg, var(--text-color), var(--bright-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dateSelector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  transition: all var(--transition-speed);
+  cursor: pointer;
+}
+
+.dateSelector:hover {
+  border-color: var(--bright-blue);
+  box-shadow: 0 2px 10px rgba(30, 174, 219, 0.1);
+}
+
+.dateSelector svg {
+  color: var(--bright-blue);
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--card-background);
+  color: var(--bright-blue);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.iconButton:hover {
+  background-color: var(--secondary-button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(30, 174, 219, 0.15);
+}
+
+/* Dashboard content */
+.dashboardContent {
+  flex: 1;
+  padding: 20px;
+  overflow-y: hidden;
+  scale: 0.78;
+  position: relative;
+  top: -120px;
+  left: -9%;
+  width: 98vw;
+}
+
+.section {
+  margin-bottom: 30px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--bright-blue);
+  border-radius: 2px;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Glassmorphism Card Styling */
+.glassCard {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.statCard {
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: all var(--transition-speed);
+  height: max-content;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(30, 174, 219, 0.1);
+}
+
+.primaryCard {
+  border-left: 4px solid var(--bright-blue);
+}
+
+.secondaryCard {
+  border-left: 4px solid #34d399;
+}
+.statValuecont {
+  display: flex;
+}
+
+.statContent h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted-text);
+  margin: 0 0 10px 0;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.statChange {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--muted-text);
+}
+
+.statChange svg {
+  margin-right: 4px;
+}
+
+.positive {
+  color: #34d399;
+}
+
+.negative {
+  color: #f87171;
+}
+
+.statIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background-color: var(--accent-color);
+  color: var(--bright-blue);
+  transition: all var(--transition-speed);
+}
+
+.statCard:hover .statIcon {
+  background-color: var(--bright-blue);
+  color: white;
+  transform: rotate(5deg);
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.metricCard {
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-speed);
+  height: max-content;
+}
+
+.metricCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.07);
+}
+
+/* Enhanced color gradients with glassmorphism */
+.metricCard.teal {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 184, 166, 0.15),
+    rgba(20, 184, 166, 0.05)
+  );
+  color: #0d9488;
+  border-left: 4px solid #0d9488;
+}
+
+.metricCard.blue {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 174, 219, 0.15),
+    rgba(30, 174, 219, 0.05)
+  );
+  color: var(--bright-blue);
+  border-left: 4px solid var(--bright-blue);
+}
+
+.metricCard.orange {
+  background: linear-gradient(
+    135deg,
+    rgba(234, 88, 12, 0.15),
+    rgba(234, 88, 12, 0.05)
+  );
+  color: #ea580c;
+  border-left: 4px solid #ea580c;
+}
+
+.metricCard.gold {
+  background: linear-gradient(
+    135deg,
+    rgba(217, 119, 6, 0.15),
+    rgba(217, 119, 6, 0.05)
+  );
+  color: #d97706;
+  border-left: 4px solid #d97706;
+}
+
+.metricContent h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: inherit;
+  opacity: 0.8;
+  margin: 0 0 10px 0;
+}
+
+.metricValue {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.metricChange {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--muted-text);
+}
+
+.metricChange svg {
+  margin-right: 4px;
+}
+
+.metricIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: inherit;
+  transition: all var(--transition-speed);
+}
+
+.metricCard:hover .metricIcon {
+  background-color: white;
+  transform: rotate(5deg);
+}
+
+/* Chart Section */
+.chartSection {
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.chartTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.chartSubtitle {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+  margin: 5px 0 0 0;
+}
+
+.timeframeSelector {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.timeframeButton {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  color: var(--muted-text);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.timeframeButton:hover {
+  color: var(--bright-blue);
+}
+
+.timeframeButton.active {
+  background-color: var(--bright-blue);
+  color: white;
+}
+
+.chartPlaceholder {
+  width: 100%;
+  height: 300px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-text);
+  border: 1px dashed var(--border-color);
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .statsGrid,
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .chartHeader {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .timeframeSelector {
+    width: 100%;
+  }
+}
+/* Add this to your existing StatisticsSection.module.css file */
+
+/* Chart Type Selector */
+.chartTypeSelector {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+/* Chart Control Panel */
+.chartControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* For smaller screens, stack the controls */
+@media (max-width: 768px) {
+  .chartControls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chartTypeSelector {
+    width: 100%;
+  }
+}
+
+/* Add animation for chart transitions */
+.chartContainer {
+  transition: all 0.5s ease;
+}
+
+.chartContainer:hover {
+  transform: scale(1.01);
+}
+
+/* Add to StatisticsSection.module.css */
+
+
+.timeFilterContainer {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+}
+
+.timeFilterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.timeFilterButton {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  color: var(--muted-text);
+}
+
+.timeFilterButton:hover {
+  border-color: var(--bright-blue);
+  color: var(--bright-blue);
+}
+
+.timeFilterButton.active {
+  background-color: var(--bright-blue);
+  color: white;
+  border-color: var(--bright-blue);
+}
+
+/* Charts Grid Layout */
+.chartsGridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chartGridItem {
+  padding: 25px;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chartGridItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design for charts grid */
+
+/* Make date range filter responsive */
+@media (max-width: 768px) {
+  .timeFilterButtons {
+    justify-content: center;
+  }
+
+  .timeFilterButton {
+    flex: 1;
+    min-width: calc(33% - 10px);
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeFilterButton {
+    min-width: calc(50% - 10px);
+  }
+}
+.comparisonControls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metricSelectors {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.metricButton {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  color: var(--muted-text);
+}
+
+.metricButton:hover {
+  border-color: var(--bright-blue);
+  color: var(--bright-blue);
+}
+
+.metricButton.active {
+  background-color: var(--bright-blue);
+  color: white;
+  border-color: var(--bright-blue);
+}
+
+.timeframeSelect {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  width: 100%;
+  color: var(--text-color);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.timeframeSelect:hover, .timeframeSelect:focus {
+  border-color: var(--bright-blue);
+  outline: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .comparisonControls {
+    width: 100%;
+  }
+  
+  .metricSelectors {
+    justify-content: center;
+  }
+  
+  .metricButton {
+    flex: 1;
+    text-align: center;
+  }
+}
+/* Add these styles to your StatisticsSection.module.css */
+
+.timeFilterSection {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+
+
+.selectedDateRange {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #666;
+}
+
+.timeFilterContainer {
+  position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.timeFilterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeFilterButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeFilterButton:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.timeFilterButton.active {
+  background-color: #e0e7ff;
+  border-color: #a5b4fc;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.customRangeButton {
+  background-color: white;
+  border: 1px dashed #cbd5e1;
+}
+
+.customRangePanel {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #fafafa;
+}
+
+.dateRangeInputs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dateInputGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dateInputGroup label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.dateInput {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  width: 100%;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #a5b4fc;
+  box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.2);
+}
+.dateRangeSelector{
+  display: flex;
+  gap: 10px;
+}
+
+.customRangeActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.applyButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #534bed;
+  color: white;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.applyButton:hover {
+  background-color: #4338ca;
+}
+
+
+
+.cancelButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: white;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+}

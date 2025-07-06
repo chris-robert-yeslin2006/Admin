@@ -42,6 +42,18 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
             <span>Statistics</span>
           </li>
 
+          {userProfile.role === 'student' && (
+            <li
+              className={`nav-item ${
+                activeSection === 'practice' ? 'active' : ''
+              }`}
+              onClick={() => onNavChange('practice')}
+            >
+              <i>👥</i>
+              <span>Practice</span>
+            </li>
+          )}
+
           {isOrganization && (
             <li
               className={`nav-item ${
@@ -80,36 +92,49 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
             <div className='nav-toggle'>
               <div className='nav-label'>
                 <i>🎓</i>
-                <span>Student</span>
+                <span>
+                  {userProfile.role !== 'student' ? 'Student' : 'Test'}
+                </span>
               </div>
             </div>
-
-            <ul className='sub-nav'>
-              <li
-                className={activeSection === 'student-add' ? 'active' : ''}
-                onClick={() => onNavChange('student-add')}
-              >
-                Add
-              </li>
-              <li
-                className={activeSection === 'student-list' ? 'active' : ''}
-                onClick={() => onNavChange('student-list')}
-              >
-                List
-              </li>
-            </ul>
+            {userProfile.role !== 'student' && (
+              <ul className='sub-nav'>
+                <li
+                  className={activeSection === 'student-add' ? 'active' : ''}
+                  onClick={() => onNavChange('student-add')}
+                >
+                  Add
+                </li>
+                <li
+                  className={activeSection === 'student-list' ? 'active' : ''}
+                  onClick={() => onNavChange('student-list')}
+                >
+                  List
+                </li>
+              </ul>
+            )}
+            {userProfile.role === 'student' && (
+              <ul className='sub-nav'>
+                <li
+                  className={activeSection === 'student-test' ? 'active' : ''}
+                  onClick={() => onNavChange('student-test')}
+                >
+                  Test List
+                </li>
+              </ul>
+            )}
           </li>
-
-          <li
-            className={`nav-item ${
-              activeSection === 'analytics' ? 'active' : ''
-            }`}
-            onClick={() => onNavChange('analytics')}
-          >
-            <i>📈</i>
-            <span>Analytics</span>
-          </li>
-
+          {userProfile.role !== 'student' && (
+            <li
+              className={`nav-item ${
+                activeSection === 'analytics' ? 'active' : ''
+              }`}
+              onClick={() => onNavChange('analytics')}
+            >
+              <i>📈</i>
+              <span>Analytics</span>
+            </li>
+          )}
           {isOrganization && (
             <li
               className={`nav-item ${
@@ -133,7 +158,7 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
             </li>
           )}
 
-          {!isOrganization && (
+          {!isOrganization && userProfile.role != 'student' && (
             <li
               className={`nav-item ${
                 activeSection.startsWith('test-schedule') ? 'active' : ''
@@ -145,21 +170,38 @@ export default function SideNav ({ activeSection, onNavChange, userProfile }) {
                   <span>Test Schedule</span>
                 </div>
               </div>
-
-              <ul className='sub-nav'>
-                <li
-                  className={activeSection === 'test-schedule-add' ? 'active' : ''}
-                  onClick={() => onNavChange('test-schedule-add')}
-                >
-                  Schedule Test
-                </li>
-                <li
-                  className={activeSection === 'test-schedule-list' ? 'active' : ''}
-                  onClick={() => onNavChange('test-schedule-list')}
-                >
-                  List of Tests
-                </li>
-              </ul>
+              {userProfile.role !== 'student' && (
+                <ul className='sub-nav'>
+                  <li
+                    className={
+                      activeSection === 'test-schedule-add' ? 'active' : ''
+                    }
+                    onClick={() => onNavChange('test-schedule-add')}
+                  >
+                    Schedule Test
+                  </li>
+                  <li
+                    className={
+                      activeSection === 'test-schedule-list' ? 'active' : ''
+                    }
+                    onClick={() => onNavChange('test-schedule-list')}
+                  >
+                    List of Tests
+                  </li>
+                </ul>
+              )}
+              {userProfile.role === 'student' && (
+                <ul className='sub-nav'>
+                  <li
+                    className={
+                      activeSection === 'test-schedule-list' ? 'active' : ''
+                    }
+                    onClick={() => onNavChange('test-schedule-list')}
+                  >
+                    My Tests
+                  </li>
+                </ul>
+              )}
             </li>
           )}
         </ul>

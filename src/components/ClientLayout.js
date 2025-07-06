@@ -35,7 +35,7 @@ export default function ClientLayout ({ children }) {
 
   const handleNavChange = section => {
     let routes = {}
-    
+
     if (role === 'org') {
       routes = {
         'statistics': '/organization/Statistics',
@@ -44,20 +44,28 @@ export default function ClientLayout ({ children }) {
         'student-add': '/organization/Student/Add',
         'student-list': '/organization/Student/List',
         'analytics': '/organization/Analytics/List',
-        "contentManagement": '/organization/Content',
+        'contentManagement': '/organization/Content',
         'systemSettings': '/organization/Settings'
+      }
+    } else if (role === 'student') {
+      routes = {
+        'statistics': '/Student/Statistics',
+        'student-list': '/Student/Student/List',
+        'student-test': '/Student/test/List',
+        'practice': '/Student/Practice',
+        'analytics': '/Student/Analytics/LanguageDetails',
+        'test-schedule-list': '/Student/test/List',
       }
     } else {
       routes = {
         'statistics': '/admin/Statistics',
-        'student-add': '/admin/Student/Add',
         'student-list': '/admin/Student/List',
         'analytics': '/admin/Analytics/LanguageDetails',
         'test-schedule-add': '/admin/testSchedule/add',
-        'test-schedule-list': '/admin/testSchedule/list'
+        'test-schedule-list': '/admin/testSchedule/list',
       }
     }
-    
+
     if (routes[section]) {
       router.push(routes[section])
     }

@@ -76,7 +76,7 @@ const Login = () => {
         // Redirect based on role with fixed URL paths
         switch(result.role) {
           case 'student':
-            router.push('/student');
+            router.push('/Student');
             break;
           case 'admin':
             router.push('/admin');  // Fixed the bracket typo
