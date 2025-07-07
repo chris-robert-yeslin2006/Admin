@@ -15,11 +15,28 @@
   border-bottom: 2px solid #e5e7eb;
 }
 
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .header h1 {
   color: #1f2937;
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
+}
+
+.headerStats {
+  display: flex;
+  gap: 16px;
+}
+
+.testCount {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .refreshButton {
@@ -31,11 +48,19 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .refreshButton:hover {
   background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.refreshIcon {
+  font-size: 16px;
 }
 
 .loading {
@@ -121,7 +146,24 @@
 
 .emptyState p {
   font-size: 16px;
-  margin: 0;
+  margin: 0 0 20px 0;
+}
+
+.checkAgainButton {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.checkAgainButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
 }
 
 .testGrid {
@@ -145,6 +187,16 @@
 .testCard:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
+}
+
+.activeCard {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+}
+
+.startingSoonCard {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 }
 
 .testHeader {
@@ -206,6 +258,11 @@
   font-weight: 600;
 }
 
+.countdown {
+  color: #f59e0b;
+  font-weight: 700;
+}
+
 .statusBadge {
   padding: 4px 8px;
   border-radius: 6px;
@@ -224,6 +281,11 @@
   color: #065f46;
 }
 
+.statusBadge.startingSoon {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
 .statusBadge.completed {
   background-color: #e5e7eb;
   color: #374151;
@@ -236,8 +298,6 @@
 
 .startButton {
   flex: 1;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 10px;
@@ -247,15 +307,122 @@
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.startButton:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+.activeButton {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.activeButton:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   transform: translateY(-1px);
+}
+
+.startingSoonButton {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.startingSoonButton:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-1px);
+}
+
+.inactiveButton {
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.inactiveButton:hover {
+  background-color: #d1d5db;
+}
+
+.buttonIcon {
+  font-size: 16px;
 }
 
 .startButton:active {
   transform: translateY(0);
+}
+
+/* Toast Notification Styles */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 400px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+}
+
+.toastContent {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toastMessage {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.toastDismiss {
+  background: none;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toastDismiss:hover {
+  opacity: 1;
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.toast-info {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.toast-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* Responsive design */
@@ -296,6 +463,13 @@
   .languageBadge {
     align-self: flex-start;
   }
+  
+  .toast {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -311,5 +485,14 @@
   
   .detailValue {
     font-size: 14px;
+  }
+  
+  .headerContent {
+    width: 100%;
+  }
+  
+  .refreshButton {
+    width: 100%;
+    justify-content: center;
   }
 }
